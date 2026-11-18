@@ -5,7 +5,8 @@
   "scripts": {
     "flujo": "node e2e-flujo.mjs capturas/flujo ../leads",
     "robustez": "node e2e-robustez.mjs capturas/robustez ../leads",
-    "catalogo": "node e2e-catalogo.mjs capturas/catalogo ../leads"
+    "catalogo": "node e2e-catalogo.mjs capturas/catalogo ../leads",
+    "email": "node prueba-email.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "^25.18.1"

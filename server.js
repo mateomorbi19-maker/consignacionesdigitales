@@ -21,10 +21,14 @@ import { createReadStream } from 'node:fs';
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { avisarNuevoLead, enmascarar, leerConfiguracion as leerConfiguracionAviso } from './aviso-email.js';
 
 const RAIZ = path.dirname(fileURLToPath(import.meta.url));
 const DIR_PUBLICO = path.join(RAIZ, 'public');
-const DIR_LEADS = path.join(RAIZ, 'leads');
+// Carpeta de los envíos: ./leads, salvo que se indique otra (LEADS_DIR), por ejemplo un volumen.
+const DIR_LEADS = process.env.LEADS_DIR ? path.resolve(process.env.LEADS_DIR) : path.join(RAIZ, 'leads');
+// Aviso por email de cada envío (se configura con AVISO_EMAIL y SMTP_*; ver aviso-email.js).
+const AVISO = leerConfiguracionAviso();
 
 const EN_RED = process.argv.includes('--red');
 // En un hosting hay que escuchar en todas las interfaces: HOST=0.0.0.0. En local, solo esta compu.
@@ -408,6 +412,13 @@ async function recibirLead(req, res) {
   const via = [registro.contacto.telefono && 'teléfono', registro.contacto.email && 'email'].filter(Boolean).join(' + ');
   console.log(`  ✔ Nuevo lead: ${marca} ${modelo} ${anio} · ${fotos.length} foto(s) · contacto: ${via} → leads/${registro.id}`);
   responderJSON(res, 201, { ok: true, id: registro.id });
+
+  // El aviso sale después de responder: el vendedor no espera al mail, y si el mail falla el envío ya quedó guardado.
+  if (AVISO) {
+    avisarNuevoLead(AVISO, registro, fotos)
+      .then(() => console.log(`  ✉ Aviso enviado por email: ${marca} ${modelo} ${anio}`))
+      .catch((error) => console.error(`  ✖ No se pudo enviar el aviso por email (${registro.id}): ${error.message}`));
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -486,6 +497,11 @@ async function escuchar(puerto, intentosRestantes = 10) {
       console.log('  (Usalo solo en redes de confianza: cualquiera en la misma red puede abrirlo.)');
     }
     console.log(`  Los envíos se guardan en: ${DIR_LEADS}`);
+    console.log(
+      AVISO
+        ? `  ✉ Aviso por email: activo, a ${AVISO.para.map(enmascarar).join(', ')} (vía ${AVISO.host}:${AVISO.puerto})`
+        : '  ✉ Aviso por email: desactivado (configurá AVISO_EMAIL y SMTP_*; ver el README)',
+    );
     console.log('  (Ctrl+C para detener)');
     console.log('');
   };

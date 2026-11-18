@@ -31,6 +31,35 @@ El repo trae un `Dockerfile`, así que Easypanel (o cualquier hosting con Docker
 - **Envíos:** se guardan en `/app/leads`. Para no perderlos en cada despliegue, montá un volumen ahí. En Easypanel, en Montajes, agregá un "Volume" con ruta `/app/leads`. Igual, el destino definitivo de los envíos sigue pendiente (ver abajo).
 - **Sin Docker** (un servidor propio): `HOST=0.0.0.0 PORT=3000 npm start`, y adelante un proxy (Nginx o Caddy) con el dominio y el HTTPS.
 
+### Aviso por email de cada envío
+
+Cada vez que alguien envía una consignación, el servidor te manda un mail. Incluye:
+
+- el resumen del vehículo y el contacto;
+- un botón para llamar;
+- las fotos adjuntas, con el nombre de su toma;
+- "Responder", que le llega directo al vendedor.
+
+El mail sale después de guardar el envío: si falla, el envío queda guardado igual y el error queda en la consola del servidor.
+
+Se configura con variables de entorno (en Easypanel: **Environment**). Nunca van en el código, porque el repositorio es público.
+
+| Variable | Valor |
+|---|---|
+| `AVISO_EMAIL` | a quién avisar (tu email; para varios, separalos con coma) |
+| `SMTP_HOST` | `smtp.gmail.com` |
+| `SMTP_PORT` | `465` |
+| `SMTP_USER` | la cuenta de Gmail que envía (puede ser la misma de `AVISO_EMAIL`) |
+| `SMTP_PASS` | una **contraseña de aplicación** de esa cuenta (no la clave normal) |
+
+Para sacar la contraseña de aplicación de Gmail:
+
+1. Activá la verificación en dos pasos en tu cuenta de Google.
+2. Entrá a https://myaccount.google.com/apppasswords.
+3. Creá una con el nombre "Surcars landing" y copiá los 16 caracteres (los espacios dan igual).
+
+Después de cargar las variables, desplegá de nuevo. Al arrancar, la consola dice si el aviso quedó activo. Con otro proveedor de correo, usá su servidor SMTP: el puerto 587 también funciona, con STARTTLS.
+
 ## Flujo
 
 1. **Portada**: título "Venta 100% digital", botón "Quiero vender mi vehículo", "Cómo funciona" en tres pasos y un cierre con el mismo botón.
@@ -103,6 +132,7 @@ En `lead.json`, `fotos` tiene las rutas y `fotos_tomas` dice qué toma es cada f
 ```
 landing-consignacion/
 ├─ server.js             servidor local (archivos + recepción de envíos)
+├─ aviso-email.js        aviso por email de cada envío (SMTP propio, sin dependencias)
 ├─ Dockerfile            imagen para publicarla (Easypanel u otro hosting con Docker)
 ├─ DESIGN.md             sistema visual de esta landing
 ├─ public/

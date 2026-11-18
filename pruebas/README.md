@@ -12,6 +12,10 @@ Pruebas automáticas que recorren el formulario en un navegador real (Microsoft 
    - Catálogo con mouse y teclado: nombre al pasar, clic, flechas, filtro, "Usar" y Esc.
    - Catálogo con dos toques en el celular, y el teclado recién al segundo toque en el campo.
    - Fotos: cada una en su casilla, varias juntas en orden, quitar, y su toma en `lead.json`.
+6. `npm run email`: prueba el aviso por email con un servidor de correo falso. No necesita la landing levantada ni Edge, no manda mails reales y no toca `../leads`. Resultado esperado: **17/17**.
+   - Con el aviso configurado: el mail llega con asunto, resumen, "Responder" al vendedor y las fotos adjuntas.
+   - Si la clave es incorrecta, el vendedor igual ve su envío confirmado.
+   - Sin configurar, el formulario funciona igual.
 
 Cada script imprime una línea `OK` o `XX` por check y al final los problemas de consola o de red. Si hay alguno, termina con error. Las capturas quedan en `capturas/`. Edge tiene que estar en `C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe`.
 

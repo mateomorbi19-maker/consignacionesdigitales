@@ -7,7 +7,7 @@ ENV NODE_ENV=production \
     PORT=3000
 
 # Solo lo necesario para servir la landing: las pruebas y los envíos no van en la imagen.
-COPY package.json server.js ./
+COPY package.json server.js aviso-email.js ./
 COPY public ./public
 
 # Los envíos se guardan en /app/leads. Montá un volumen ahí para no perderlos entre despliegues.
