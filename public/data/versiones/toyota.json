@@ -1,0 +1,20 @@
+{
+  "Hilux": ["2.8 SRX 4x4 CD AT", "2.8 SRV 4x4 CD", "2.8 SRV 4x2 CD", "2.4 DX 4x2 CD", "3.0 SRV 4x4 CD", "3.0 SRV 4x2 CD", "2.8 SR 4x4 CD", "2.8 SRV 4x2 CD AT", "2.8 SRV 4x4 CD AT", "2.8 SRX 4x4 CD", "3.0 SR 4x2 CD", "3.0 SR 4x4 CD", "2.5 DX 4x2 CD", "2.5 DX Pack 4x4 CD", "3.0 SRV Cuero 4x4 CD", "2.8 GR-Sport 4x4 CD AT", "2.8 SRX 4x2 CD AT", "2.4 DX 4x4 CD", "2.4 SR 4x2 CD", "2.5 DX 4x4 CD", "2.5 DX Pack 4x2 CD", "2.4 DX 4x2 CS", "3.0 SRV 4x4 CD AT", "3.0 Limited 4x4 CD AT", "2.5 DX 4x2 CS"],
+  "Corolla": ["1.8 XEI CVT", "1.8 XEI MT", "2.0 XEI CVT", "1.8 XLI MT", "1.8 SEG CVT", "2.0 XLI CVT", "1.8 XEI AT", "2.0 SEG CVT", "1.8 Hybrid XEI", "1.8 Hybrid SEG", "1.8 XEI Pack CVT", "1.8 XEI Pack MT", "2.0 XLI MT", "1.8 SEG AT", "1.8 SEG MT", "1.8 XLI CVT", "2.0 GR-Sport CVT", "1.6 XLI MT"],
+  "Etios": ["1.5 XLS Sedán", "1.5 XLS 5P", "1.5 X Sedán", "1.5 X 5P", "1.5 XS Sedán", "1.5 XS 5P", "1.5 XLS Sedán AT", "1.5 XLS 5P AT", "1.5 Cross", "1.5 XLS Pack 5P", "1.5 XLS Pack 5P AT", "1.5 Aibo"],
+  "Corolla Cross": ["2.0 XEI", "2.0 SEG", "1.8 Hybrid XEI", "2.0 XLI", "1.8 Hybrid SEG", "2.0 GR-Sport"],
+  "Yaris": ["1.5 XLS 5P CVT", "1.5 XS 5P MT", "1.5 S 5P CVT", "1.5 XLS Pack 5P CVT", "1.5 XLS 5P MT", "1.5 XS 5P CVT", "1.5 XLS Sedán CVT", "1.5 XLS Pack Sedán CVT", "1.5 XS Sedán MT", "1.5 XS Sedán CVT"],
+  "SW4": ["2.8 SRX 4x4 AT", "3.0 SRV 4x4 AT", "3.0 SRV 4x4", "2.8 GR-Sport 4x4 AT", "2.8 SRX 4x4", "3.0 SRV Cuero 4x4 AT", "2.8 SR 4x4 AT", "3.0 SRV Cuero 4x4", "2.8 SR 4x4", "2.8 Diamond 4x4 AT", "2.7 SRV Cuero 4x2 AT", "2.8 Diamond II 4x4 AT"],
+  "RAV4": ["2.0 TX 4x2 CVT", "2.5 VX 4x4 AT", "2.5 Hybrid Limited 4x2", "2.5 Hybrid Limited 4x4", "2.4 4x2 AT", "2.4 4x4 AT"],
+  "Hiace": ["2.8 Furgón L2H2", "2.8 Commuter", "2.8 Furgón L1H1", "2.8 Wagon"],
+  "Camry": ["3.5 V6", "2.5", "2.5 Hybrid"],
+  "Land Cruiser": ["4.5 V8 VX", "3.3 V6 VX", "3.3 V6 GR-Sport"],
+  "Land Cruiser Prado": ["4.0 V6 VX AT", "4.0 V6 TXL AT", "3.0 TDI AT", "4.0 V6 VX MT", "3.0 TDI MT"],
+  "Yaris Cross": ["1.5 XEI", "1.5 Hybrid XEI", "1.5 XLI", "1.5 SEG", "1.5 Hybrid SEG"],
+  "C-HR": ["1.8 Hybrid"],
+  "Innova": ["2.7 SRV", "2.7 SR"],
+  "Prius": ["1.8 Hybrid"],
+  "86": ["2.0 MT", "2.0 AT"],
+  "GR Yaris": ["1.6 Turbo MT", "1.6 Turbo AT"],
+  "bZ4X": ["EV 4x4"]
+}

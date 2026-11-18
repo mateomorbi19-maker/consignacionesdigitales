@@ -1,0 +1,17 @@
+{
+  "Frontier": ["2.3 XE 4x2", "2.3 LE 4x4 AT", "2.3 S 4x2", "2.3 XE 4x4", "2.3 LE 4x4", "2.3 SE 4x2", "2.3 S 4x4", "2.3 LE 4x2", "2.3 PRO-4X 4x4 AT", "2.3 X-Gear 4x4 AT", "2.3 Platinum 4x4 AT", "2.3 XE 4x2 AT", "2.3 S 4x2 AT", "2.3 Platinum 4x2 AT", "2.5 LE 4x4", "2.5 SE 4x4", "2.5 XE 4x2", "2.5 LE 4x4 AT", "2.8 SE 4x4"],
+  "Kicks": ["1.6 Advance CVT", "1.6 Exclusive CVT", "1.6 Sense", "1.6 Advance", "1.6 X-Play CVT", "1.6 Advance Plus CVT", "1.0 Turbo Advance CVT", "1.0 Turbo Exclusive CVT", "1.0 Turbo Sense CVT"],
+  "Versa": ["1.6 Advance CVT", "1.6 Sense", "1.6 Advance", "1.6 Exclusive CVT", "1.6 Sense CVT", "1.6 Advance AT", "1.6 Exclusive AT", "1.6 SR", "1.6 V-Drive", "1.6 V-Drive Plus AT", "1.6 Acenta", "1.6 Visia", "1.6 Acenta AT"],
+  "March": ["1.6 Active", "1.6 Sense", "1.6 Advance", "1.6 Visia", "1.6 Acenta", "1.6 Advance Media Tech", "1.6 Visia Plus", "1.6 Advance AT", "1.6 Sense AT", "1.6 SR"],
+  "Sentra": ["1.8 Advance", "1.8 Exclusive CVT", "2.0 Exclusive CVT", "2.0 Advance CVT", "1.8 Sense", "1.8 SR CVT", "2.0 Acenta", "2.0 Tekna CVT", "2.0 SR CVT", "1.8 Advance CVT", "2.0 Acenta CVT"],
+  "Tiida": ["1.8 Tekna 5P", "1.8 Acenta 5P", "1.8 Visia 5P", "1.8 Tekna Sedán", "1.8 Acenta Sedán", "1.8 Visia Sedán"],
+  "Note": ["1.6 Advance", "1.6 Sense", "1.6 Exclusive CVT", "1.6 Advance CVT", "1.6 SR", "1.6 Sense CVT", "1.6 SR CVT"],
+  "X-Trail": ["2.5 Exclusive CVT", "2.5 Tekna CVT", "2.5 Acenta", "2.5 Advance CVT", "1.5 e-Power e-4ORCE"],
+  "Kicks Play": ["1.6 Advance CVT", "1.6 Sense", "1.6 Exclusive CVT", "1.6 Advance Plus CVT"],
+  "Murano": ["3.5 V6 Exclusive CVT", "3.5 V6 CVT"],
+  "Pathfinder": ["2.5 dCi"],
+  "X-Terra": ["2.8 SE 4x4"],
+  "Leaf": ["EV Tekna"],
+  "Terrano II": ["2.7 TD"],
+  "Kait": ["1.6 Advance", "1.6 Exclusive", "1.6 Sense"]
+}

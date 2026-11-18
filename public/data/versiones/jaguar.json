@@ -1,0 +1,11 @@
+{
+  "XF": ["2.0 Prestige", "3.0 V6", "3.0 V6 S"],
+  "F-Pace": ["2.0 D Prestige", "3.0 V6 R-Sport", "3.0 V6 Prestige", "2.0 R-Sport"],
+  "XE": ["2.0 Prestige", "2.0 Pure", "2.0 R-Sport", "3.0 V6 S", "2.0 R-Dynamic", "2.0 S"],
+  "X-Type": ["2.0 V6", "2.5 V6", "3.0 V6"],
+  "E-Pace": ["2.0 R-Dynamic SE 4x4", "2.0 S 4x4", "2.0 SE 4x4", "1.5 SE 4x2", "1.5 R-Dynamic SE 4x2", "2.0 D S 4x4", "2.0 D R-Dynamic SE 4x4", "1.5 PHEV R-Dynamic SE 4x4"],
+  "S-Type": ["3.0 V6", "4.2 V8", "4.0 V8"],
+  "XJ": ["4.2 V8", "5.0 V8", "3.0 V6", "4.0 V8"],
+  "F-Type": ["3.0 V6 S Coupé", "3.0 V6 Coupé", "2.0 R-Dynamic Coupé", "3.0 V6 R-Dynamic Coupé", "5.0 V8 R Coupé", "2.0 R-Dynamic Convertible", "3.0 V6 R-Dynamic Convertible"],
+  "XK": ["4.2 V8", "5.0 V8", "4.0 V8", "5.0 V8 R"]
+}

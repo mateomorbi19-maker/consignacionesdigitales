@@ -1,0 +1,14 @@
+{
+  "name": "surcars-landing-consignacion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Formulario de consignación 100% digital de Surcars para campañas de anuncios.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "red": "node server.js --red"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

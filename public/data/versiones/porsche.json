@@ -1,0 +1,9 @@
+{
+  "Cayenne": ["3.6 V6", "3.0 V6 Diesel", "4.8 V8 S", "3.0 V6", "3.2 V6", "4.5 V8 S", "3.6 V6 S", "4.8 V8 GTS", "3.0 V6 E-Hybrid", "2.9 V6 S", "4.0 V8 GTS", "4.8 V8 Turbo", "4.5 V8 Turbo", "4.0 V8 Turbo", "3.0 V6 S Hybrid", "3.0 V6 S E-Hybrid", "4.0 V8 S", "4.8 V8 Turbo S", "4.0 V8 Turbo E-Hybrid", "3.0 V6 Coupé", "3.0 V6 E-Hybrid Coupé", "EV", "EV Turbo"],
+  "Macan": ["2.0", "3.0 V6 S", "2.0 T", "2.9 V6 GTS", "3.0 V6 GTS", "2.9 V6 S", "3.6 V6 Turbo", "2.9 V6 Turbo", "EV 4", "EV", "EV 4S", "EV Turbo", "EV GTS"],
+  "911": ["3.0 Carrera S", "3.0 Carrera", "3.8 Carrera S", "3.6 Carrera", "3.0 Carrera 4S", "3.4 Carrera", "3.0 Carrera GTS", "3.8 Turbo S", "3.8 Carrera 4S", "3.8 Turbo", "3.6 Turbo", "4.0 GT3", "4.0 GT3 RS", "3.0 Targa 4S", "3.0 Carrera S Cabriolet", "3.0 Carrera Cabriolet"],
+  "Panamera": ["3.6 V6", "4.8 V8 S", "4.8 V8 4S", "2.9 V6 4", "2.9 V6 4S", "4.8 V8 Turbo", "4.8 V8 GTS", "3.6 V6 4", "2.9 V6 4 E-Hybrid", "4.0 V8 GTS", "4.0 V8 Turbo", "3.0 V6 S", "3.0 V6 4S", "2.9 V6", "2.9 V6 4S E-Hybrid", "4.0 V8 Turbo S E-Hybrid", "4.0 V8 Turbo E-Hybrid", "2.9 V6 4 Sport Turismo"],
+  "Boxster": ["2.7", "3.4 S", "2.0", "2.5 S", "3.2 S", "2.9", "3.4 GTS", "4.0 GTS", "2.5 GTS", "4.0 Spyder"],
+  "Cayman": ["2.0", "2.7", "3.4 S", "2.5 S", "2.9", "3.4 GTS", "4.0 GTS", "2.5 GTS", "3.8 GT4", "4.0 GT4", "4.0 GT4 RS"],
+  "Taycan": ["EV 4S", "EV Turbo", "EV Turbo S", "EV 4 Cross Turismo"]
+}

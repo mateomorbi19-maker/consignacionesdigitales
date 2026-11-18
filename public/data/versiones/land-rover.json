@@ -1,0 +1,10 @@
+{
+  "Range Rover Evoque": ["2.0 Si4 Pure", "2.0 Si4 Prestige", "2.0 Si4 Dynamic", "2.0 Si4 SE", "2.0 Si4 HSE", "2.0 Si4 HSE Dynamic", "2.0 P250 SE", "2.0 P250 R-Dynamic SE", "2.2 SD4 Prestige", "2.2 SD4 HSE", "2.0 HST"],
+  "Discovery Sport": ["2.0 Si4 SE", "2.0 Si4 HSE", "2.0 Si4 S", "2.2 SD4 HSE"],
+  "Freelander": ["2.2 TD4 S", "2.2 TD4 SE", "2.2 TD4 HSE", "2.0 Si4 S", "2.0 Si4 HSE", "3.2 i6 HSE", "3.2 i6 S", "2.0 TD4 SE", "2.0 TD4 HSE"],
+  "Range Rover Sport": ["3.0 TDV6 HSE", "2.7 TDV6 HSE", "3.0 SDV6 HSE", "3.0 V6 Supercharged HSE", "3.0 SDV6 HSE Dynamic", "3.0 TDV6 SE", "2.7 TDV6 SE", "3.6 TDV8 HSE", "5.0 V8 Supercharged", "4.2 V8 Supercharged"],
+  "Discovery": ["3.0 SDV6 HSE", "2.7 TDV6 HSE", "3.0 TDV6 HSE", "3.0 TD6 HSE", "2.7 TDV6 SE", "3.0 TDV6 SE", "2.7 TDV6 S", "3.0 Si6 HSE", "2.5 TD5"],
+  "Defender": ["2.5 TD5 110", "2.4 TD 110", "2.2 TD 110", "2.5 TD5 90", "2.0 P400e X-Dynamic HSE 110", "2.0 P400e S"],
+  "Range Rover": ["4.4 SDV8 Vogue", "3.6 TDV8 Vogue", "4.4 TDV8 Vogue", "4.4 TDV8 HSE", "5.0 V8 Supercharged Vogue SE", "4.4 V8 Vogue"],
+  "Range Rover Velar": ["2.0 P250 S", "2.0 P250 R-Dynamic", "2.0 P300 S", "2.0 D240 S", "3.0 P380 R-Dynamic"]
+}

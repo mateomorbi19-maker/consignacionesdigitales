@@ -1,0 +1,13 @@
+{
+  "name": "surcars-landing-pruebas",
+  "private": true,
+  "description": "Pruebas de punta a punta del formulario de consignación (no forman parte de la landing).",
+  "scripts": {
+    "flujo": "node e2e-flujo.mjs capturas/flujo ../leads",
+    "robustez": "node e2e-robustez.mjs capturas/robustez ../leads",
+    "catalogo": "node e2e-catalogo.mjs capturas/catalogo ../leads"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.18.1"
+  }
+}

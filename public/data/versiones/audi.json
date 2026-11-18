@@ -1,0 +1,21 @@
+{
+  "A3": ["1.4 TFSI Sedán", "1.4 TFSI Sportback", "1.4 TFSI Advanced Sedán", "1.8 TFSI Sedán", "2.0 TFSI S line Sportback", "1.4 TFSI Advanced Sportback", "1.8 TFSI Sportback", "1.8 TFSI 3P", "1.4 TFSI 3P", "2.0 TFSI Sedán", "2.0 TFSI quattro Sedán", "2.0 TFSI Sportback", "2.0 TFSI 3P", "2.0 FSI 3P", "1.6 3P", "1.8T 3P"],
+  "A4": ["1.8 TFSI Ambition", "2.0 TFSI", "1.8 TFSI Attraction", "2.0 TFSI quattro", "2.0 TFSI Ambition", "2.0 TFSI Attraction", "2.0 TFSI Advanced", "1.8T", "3.2 FSI quattro"],
+  "Q3": ["1.4 TFSI", "2.0 TFSI quattro", "1.4 TFSI Advanced", "1.4 TFSI Advanced Plus", "1.4 TFSI Sportback", "2.0 TFSI quattro Sportback"],
+  "A1": ["1.4 TFSI Ambition 3P", "1.4 TFSI Ambition Sportback", "1.4 TFSI 3P", "1.4 TFSI Sportback", "1.0 TFSI Sportback", "1.4 TFSI S line 3P", "1.4 TFSI Attraction 3P", "1.2 TFSI Attraction 3P"],
+  "Q5": ["2.0 TFSI quattro", "2.0 TFSI quattro Advanced", "2.0 TFSI quattro Advanced Plus", "2.0 TFSI quattro Offroad", "2.0 TFSI quattro Sport", "2.0 TFSI quattro Sportback", "3.0 TFSI quattro", "3.0 TDI quattro", "3.2 FSI quattro"],
+  "A5": ["2.0 TFSI Sportback", "2.0 TFSI S line quattro", "2.0 TFSI Advanced", "2.0 TFSI Coupé", "2.0 TFSI quattro Sportback", "2.0 TFSI quattro Coupé", "2.0 TFSI Cabriolet", "3.0 TFSI quattro Coupé", "3.2 FSI quattro Coupé"],
+  "Q2": ["1.4 TFSI Sport", "1.4 TFSI", "1.5 TFSI Advanced", "2.0 TFSI quattro Sport"],
+  "A6": ["3.0 TFSI quattro", "2.8 FSI", "3.0 V6 quattro", "2.4 V6", "3.2 FSI quattro", "2.8 V6"],
+  "Q7": ["3.0 TFSI quattro", "3.0 TDI quattro", "3.0 TFSI S line quattro", "4.2 FSI quattro", "3.0 TDI S line quattro"],
+  "TT": ["2.0 TFSI Coupé", "1.8 TFSI Coupé", "2.0 TFSI quattro Coupé", "1.8T Coupé", "3.2 V6 quattro Coupé", "2.0 TFSI Roadster"],
+  "Q8": ["3.0 TFSI quattro"],
+  "S3": ["2.0 TFSI quattro Sedán", "2.0 TFSI quattro Sportback", "2.0 TFSI quattro 3P"],
+  "A7": ["3.0 TFSI quattro"],
+  "A8": ["4.2 V8 quattro", "3.0 TFSI quattro"],
+  "RS3": ["2.5 TFSI quattro Sedán", "2.5 TFSI quattro Sportback"],
+  "R8": ["5.2 V10 quattro", "4.2 V8 quattro"],
+  "e-tron": ["55 quattro", "55 quattro Sportback"],
+  "Q8 e-tron": ["55 quattro", "55 quattro Sportback"],
+  "Q6 e-tron": ["Performance"]
+}

@@ -1,0 +1,12 @@
+# Envíos recibidos en local (datos de personas reales: no versionar)
+leads/
+node_modules/
+# Capturas de las pruebas automáticas
+pruebas/capturas/
+# Variables de entorno y archivos del sistema
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,65 @@
+/* =========================================================================
+   Surcars · Tokens de marca — Paleta oficial "Neón" (aprobada 2026-11-16)
+   Regla: los colores se definen SOLO acá. Ningún componente usa hex propios.
+   Proporción objetivo de superficie: negro ~65% · blanco ~20% · azul ~15%.
+   ========================================================================= */
+:root {
+  color-scheme: dark;
+
+  /* Paleta oficial */
+  --color-negro: #06070B;   /* Dominante */
+  --color-blanco: #EDEFF5;  /* Secundario (blanco frío) */
+  --color-azul: #3557FF;    /* Acento: azul neón oscuro */
+
+  /* Los mismos colores en canales RGB, para usarlos con transparencia */
+  --rgb-negro: 6, 7, 11;
+  --rgb-blanco: 237, 239, 245;
+  --rgb-azul: 53, 87, 255;
+
+  /* Jerarquía de textos y separadores: blanco a distintas opacidades */
+  --texto: var(--color-blanco);
+  --texto-2: rgba(var(--rgb-blanco), .72);
+  --texto-3: rgba(var(--rgb-blanco), .58);          /* ≥ 6:1 sobre las superficies (WCAG AA) */
+  --texto-placeholder: rgba(var(--rgb-blanco), .58);
+  --linea: rgba(var(--rgb-blanco), .10);
+  --linea-2: rgba(var(--rgb-blanco), .15);
+  --linea-hover: rgba(var(--rgb-blanco), .30);
+  --linea-punteada: rgba(var(--rgb-blanco), .26);
+  --superficie: rgba(var(--rgb-blanco), .035);
+  --superficie-2: rgba(var(--rgb-blanco), .07);
+  --brillo-borde: rgba(var(--rgb-blanco), .06);    /* luz en el canto superior de tarjetas */
+  --brillo-boton: rgba(var(--rgb-blanco), .22);
+  --velo: rgba(var(--rgb-negro), .74);              /* fondos de controles sobre fotos */
+
+  /* Azul: acciones y estados importantes, siempre con su resplandor */
+  --azul-borde: rgba(var(--rgb-azul), .55);
+  --azul-fondo: rgba(var(--rgb-azul), .16);
+  --azul-anillo: rgba(var(--rgb-azul), .30);
+  --resplandor: rgba(var(--rgb-azul), .20);         /* resplandor radial de la portada */
+  --glow: 0 0 16px -2px rgba(var(--rgb-azul), .75);
+  --glow-fuerte: 0 0 26px 0 rgba(var(--rgb-azul), .7);
+  --glow-tarjeta: 0 0 18px -6px rgba(var(--rgb-azul), .7);
+
+  /* Sombras neutras (negro de marca) */
+  --sombra: 0 24px 48px -16px rgba(var(--rgb-negro), .9);
+  --sombra-flotante: 0 18px 36px -14px rgba(var(--rgb-negro), .95);
+
+  /* Colores de estado: fuera de la paleta, solo para mensajes de estado */
+  --color-error: #FF5D6C;
+  --rgb-error: 255, 93, 108;
+  --color-exito: #2FD38A;
+  --color-advertencia: #FFB547;
+
+  /* Tipografía: Manrope como única voz */
+  --fuente: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* Forma y movimiento */
+  --radio-sm: 8px;
+  --radio-control: 12px;
+  --radio-boton: 14px;
+  --radio-tarjeta: 22px;
+  --radio-pill: 999px;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --alto-topbar: 64px;
+  --gutter: 20px;
+}

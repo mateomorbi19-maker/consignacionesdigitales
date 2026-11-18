@@ -1,0 +1,10 @@
+{
+  "Town & Country": ["3.6 Limited"],
+  "PT Cruiser": ["2.4 Classic", "2.4 Limited", "2.0 Classic", "2.0 Limited", "2.4 Classic AT", "2.2 CRD", "2.0 Limited AT", "2.4 GT"],
+  "Neon": ["2.0 LE", "2.0 LX", "2.0 SE", "1.8 LE", "2.0 LE AT", "2.0 LX Sport", "1.8 LE Sport"],
+  "Caravan": ["3.3 SE", "2.5 TD SE", "2.4 SE"],
+  "300C": ["5.7 V8 Hemi", "3.5 V6"],
+  "Grand Caravan": ["3.3 LE", "3.3 SE"],
+  "Sebring": ["2.7 LX", "2.7 LE", "2.0 LE"],
+  "Stratus": ["2.0 LE", "2.5 LE", "2.5 LX"]
+}

@@ -1,0 +1,14 @@
+{
+  "XC60": ["2.0 T5 Momentum", "2.0 T5 Inscription", "2.0 T5 High Plus", "3.0 T6 Premium", "2.0 T6 Inscription", "2.0 T8 Recharge", "2.0 T5 High", "3.0 T6 High Plus", "3.0 T6 Plus", "3.0 T6 R-Design", "2.0 T5 High Luxury", "2.0 B5 Plus"],
+  "XC40": ["2.0 T4 Momentum", "2.0 T5 R-Design", "2.0 T5 Momentum", "EV Recharge", "EV Twin", "2.0 T4 Kinetic"],
+  "XC90": ["2.0 T6 Inscription", "2.0 D5 Momentum", "2.0 T8 Recharge", "2.0 T6 R-Design", "3.2", "2.4 D5", "2.5 T", "2.0 B5 Plus", "2.0 B5 Ultimate"],
+  "V40": ["1.6 T4 Momentum", "1.6 T4 Comfort", "1.6 T4 Inscription", "1.6 T4 High Plus", "1.6 T4 High", "1.6 T4 Plus", "1.6 T4 Cross Country", "2.0 T4 Cross Country"],
+  "S40": ["2.4", "2.0 P2", "2.0 P1", "2.5 T5"],
+  "S60": ["2.0 T5 High Plus", "2.0 T High", "2.0 T6 Inscription", "2.0 T6 Momentum", "2.0 T6 R-Design", "3.0 T6 High", "3.0 T6 Premium", "2.0 T5 High Luxury", "2.4"],
+  "C30": ["2.0 P2", "2.0 P1", "2.4", "2.0 P3", "2.5 T5", "2.5 T5 R-Design"],
+  "EX30": ["EV Single Motor", "EV Single Motor Extended Range"],
+  "C40": ["EV Twin", "EV Recharge"],
+  "V60": ["3.0 T6 High Luxury", "3.0 T6 R-Design"],
+  "S90": ["2.0 T6 Inscription"],
+  "850": ["2.5 GLT"]
+}

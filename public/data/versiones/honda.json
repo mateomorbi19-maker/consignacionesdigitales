@@ -1,0 +1,11 @@
+{
+  "HR-V": ["1.8 EX CVT", "1.8 LX CVT", "1.8 EXL CVT", "1.5 LX CVT", "1.5 EXL CVT", "1.8 LX MT"],
+  "Fit": ["1.4 LX MT", "1.4 LX AT", "1.5 EX MT", "1.5 EXL AT", "1.5 EX CVT", "1.5 EXL CVT", "1.4 LXL MT", "1.4 LXL AT", "1.5 EX AT", "1.5 EXL MT"],
+  "Civic": ["1.8 LXS MT", "1.8 EXS AT", "1.8 LXS AT", "1.8 EXS MT", "2.0 EXL CVT", "2.0 EX CVT", "1.5 Turbo EXT CVT", "1.7 LX MT", "1.7 LX AT", "1.7 EX AT", "2.0 Hybrid Advanced"],
+  "City": ["1.5 LX MT", "1.5 EXL MT", "1.5 EXL AT"],
+  "CR-V": ["2.4 LX 4x2 AT", "2.4 EXL 4x4 AT", "2.4 EX 4x4 AT", "1.5 Turbo EXT 4x4 CVT", "2.4 LX 4x2 CVT", "2.4 EX 4x2 CVT", "1.5 Turbo EXL 4x4 CVT", "1.5 Turbo EX 4x2 CVT", "1.5 Turbo LX 4x2 CVT", "2.0 Hybrid Advanced 4x4"],
+  "WR-V": ["1.5 EXL", "1.5 EX"],
+  "Accord": ["2.4 EXL", "3.5 V6 EXL", "2.0 Turbo EXT", "2.0 Hybrid Advanced"],
+  "ZR-V": ["2.0 Touring", "2.0 LX"],
+  "Pilot": ["3.5 V6 EX 4x2", "3.5 V6 Touring 4x4", "3.5 V6 4x4"]
+}

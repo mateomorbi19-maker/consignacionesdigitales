@@ -1,0 +1,11 @@
+{
+  "Renegade": ["1.8 Sport MT", "1.8 Sport AT", "1.8 Longitude AT", "1.8 Sport Plus MT", "1.8 Sport Plus AT", "1.3 T270 Longitude AT", "1.3 T270 Serie S AT", "2.0 TD Trailhawk 4x4 AT", "1.3 T270 Trailhawk 4x4 AT", "1.3 T270 Altitude AT", "1.3 T270 Sahara AT"],
+  "Compass": ["2.4 Longitude 4x2 AT", "1.3 T270 Longitude AT", "2.4 Sport 4x2 MT", "2.4 Limited Plus 4x4 AT", "2.4 Longitude 4x4 AT", "1.3 T270 Limited Plus AT", "1.3 T270 Serie S AT", "1.3 T270 Sport AT", "2.4 Limited 4x4 AT", "1.3 T270 Longitude Plus AT", "2.4 Sport 4x2 AT", "2.4 Longitude Plus 4x4 AT", "2.0 TD Trailhawk 4x4 AT", "1.3 T270 Limited AT", "2.4 Sport 4x4 AT", "2.0 Hurricane Blackhawk 4x4 AT"],
+  "Grand Cherokee": ["3.6 Limited", "4.0 Limited", "3.6 Overland", "4.0 Laredo", "4.7 V8 Limited", "3.0 CRD Laredo", "5.7 V8 Limited", "3.6 Laredo", "3.6 Limited Plus", "3.7 Laredo", "5.2 V8 Limited"],
+  "Cherokee": ["3.7 Limited", "3.7 Sport", "3.2 Limited", "3.2 Longitude", "3.2 Trailhawk", "4.0 Sport"],
+  "Commander": ["1.3 T270 Limited", "2.0 TD Overland 4x4", "2.0 Hurricane Overland 4x4", "2.0 Hurricane Blackhawk 4x4"],
+  "Wrangler": ["3.6 Rubicon Unlimited", "3.6 Sahara Unlimited", "3.6 Sport Unlimited", "2.0 Turbo Rubicon Unlimited", "3.6 Rubicon", "3.6 Sport", "2.0 Turbo Rubicon", "4.0 Sport"],
+  "Patriot": ["2.4 Sport", "2.4 Limited"],
+  "Gladiator": ["3.6 Rubicon", "3.6 Overland"],
+  "Avenger": ["1.0 T200 MHEV Altitude", "1.0 T200 MHEV Longitude", "1.0 T200 MHEV Limited"]
+}

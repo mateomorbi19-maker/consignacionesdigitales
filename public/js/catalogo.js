@@ -1,0 +1,63 @@
+/* =========================================================================
+   Catálogo de marcas y modelos del mercado argentino (1995–2026) para las
+   sugerencias de "Marca" y "Modelo". El formulario acepta texto libre: si
+   algo no está, la persona lo escribe igual.
+   - 51 marcas, 608 modelos. Modelos ordenados por qué tan comunes son
+     en el mercado de usados (los más comunes primero).
+   - Compilado y verificado el 2026-11-17 contra Autocosmos, Kavak AR,
+     Mercado Libre Autos, tablas de valuación DNRPA y notas de lanzamiento.
+   ========================================================================= */
+
+export const CATALOGO = [
+  { marca: "Alfa Romeo", modelos: ["147", "156", "MiTo", "159", "Giulietta", "145", "146", "155", "166", "GT", "Giulia", "Stelvio", "Brera", "Spider", "164", "Tonale"] },
+  { marca: "Audi", modelos: ["A3", "A4", "Q3", "A1", "Q5", "A5", "Q2", "A6", "Q7", "TT", "Q8", "S3", "A7", "A8", "RS3", "R8", "e-tron", "Q8 e-tron", "Q6 e-tron"] },
+  { marca: "BAIC", modelos: ["X35", "X55", "BJ40", "BJ30", "X25", "D20", "U5 Plus", "EU5", "BJ60"] },
+  { marca: "BMW", modelos: ["Serie 3", "X1", "Serie 1", "X3", "Serie 5", "X5", "X6", "Serie 4", "Serie 2", "X2", "X4", "Serie 7", "Z4", "M3", "X7", "M4", "Serie 6", "M2", "Z3", "M5", "Serie 8", "iX2", "iX3"] },
+  { marca: "BYD", modelos: ["Dolphin Mini", "Song Pro", "Yuan Pro", "Atto 2", "Shark", "Seal U", "Seal 5", "Ti7"] },
+  { marca: "Changan", modelos: ["MD201", "CS55 Plus", "CS15", "CS75", "Eado Plus"] },
+  { marca: "Chery", modelos: ["QQ", "Tiggo 4 Pro", "Tiggo", "Tiggo 2", "Tiggo 3", "Tiggo 5", "Face", "Fulwin", "Tiggo 7 Pro", "Skin", "Tiggo 8 Pro", "Tiggo 2 Pro", "Tiggo 4", "Arrizo 5", "Arrizo 8", "Himla"] },
+  { marca: "Chevrolet", modelos: ["Corsa", "Classic", "Onix", "Cruze", "Tracker", "S10", "Corsa Classic", "Agile", "Prisma", "Spin", "Celta", "Onix Plus", "Joy", "Sonic", "Joy Plus", "Corsa II", "Astra", "Meriva", "Captiva", "Aveo", "Cobalt", "Trailblazer", "Montana", "Equinox", "Vectra", "Zafira", "Blazer", "Spark EUV", "Silverado", "Camaro"] },
+  { marca: "Chrysler", modelos: ["Town & Country", "PT Cruiser", "Neon", "Caravan", "300C", "Grand Caravan", "Sebring", "Stratus"] },
+  { marca: "Citroën", modelos: ["C3", "Berlingo", "C4 Lounge", "C4", "C4 Cactus", "C3 Aircross", "Xsara Picasso", "Xsara", "C3 Picasso", "C4 Picasso", "Basalt", "C-Elysée", "C4 Grand Picasso", "Saxo", "C5 Aircross", "Jumper", "Jumpy", "DS3", "DS4", "C5", "Aircross", "Xantia", "C4 Aircross", "C4 SpaceTourer", "SpaceTourer", "ZX"] },
+  { marca: "DFSK", modelos: ["C31", "C35", "C32", "K01H", "Glory 580", "Glory 500", "E5"] },
+  { marca: "Dodge", modelos: ["Journey", "Ram", "Dakota"] },
+  { marca: "Dongfeng", modelos: ["Box", "Mage", "Huge"] },
+  { marca: "DS", modelos: ["DS 7 Crossback", "DS 3", "DS 3 Crossback", "DS 7", "DS 4", "DS 9"] },
+  { marca: "Fiat", modelos: ["Palio", "Cronos", "Siena", "Uno", "Strada", "Toro", "Argo", "Punto", "Palio Weekend", "Mobi", "Grand Siena", "Fiorino", "Idea", "Fastback", "Pulse", "Linea", "Doblò", "Doblò Cargo", "Qubo", "Stilo", "Bravo", "Ducato", "500", "Duna", "Marea", "500X", "Tipo", "Titano", "600", "500L", "147"] },
+  { marca: "Ford", modelos: ["Ranger", "EcoSport", "Focus", "Ka", "Fiesta", "Fiesta Kinetic Design", "Territory", "Escort", "Courier", "Kuga", "Bronco Sport", "Maverick", "Mondeo", "F-100", "Transit", "Everest", "F-150", "Bronco", "Mustang", "S-Max", "Mustang Mach-E", "Explorer"] },
+  { marca: "Foton", modelos: ["Tunland G7", "Tunland V9", "Tunland", "Gratour T3", "Wonder", "View CS2", "Tunland V7"] },
+  { marca: "Geely", modelos: ["EX5", "Emgrand", "LC", "515", "LC Cross", "Icon"] },
+  { marca: "Great Wall", modelos: ["Poer", "Wingle 7", "Wingle 5", "Wingle 6"] },
+  { marca: "Haval", modelos: ["H6", "Jolion", "H2", "H1"] },
+  { marca: "Honda", modelos: ["HR-V", "Fit", "Civic", "City", "CR-V", "WR-V", "Accord", "ZR-V", "Pilot", "Legend"] },
+  { marca: "Hyundai", modelos: ["Tucson", "Creta", "Santa Fe", "H1", "Grand i10", "i10", "i30", "HB20", "H100", "Elantra", "Accent", "Getz", "Atos", "Matrix", "Galloper", "Veloster", "Kona", "Staria", "Genesis Coupe", "HB20S", "Grand Santa Fe", "Sonata", "H350", "Ioniq"] },
+  { marca: "Isuzu", modelos: ["Pick Up", "D-Max", "Trooper"] },
+  { marca: "Iveco", modelos: ["Daily"] },
+  { marca: "JAC", modelos: ["S2", "T8", "JS4", "T6", "S3", "X200", "T9", "JS8", "S5", "JS6", "EV30X"] },
+  { marca: "Jaguar", modelos: ["XF", "F-Pace", "XE", "X-Type", "E-Pace", "S-Type", "XJ", "F-Type", "XK"] },
+  { marca: "Jeep", modelos: ["Renegade", "Compass", "Grand Cherokee", "Cherokee", "Commander", "Wrangler", "Patriot", "Gladiator", "Avenger"] },
+  { marca: "Jetour", modelos: ["X70", "Dashing", "T1", "X70 Plus", "X50", "T2"] },
+  { marca: "JMC", modelos: ["Grand Avenue"] },
+  { marca: "Kaiyi", modelos: ["X3", "X3 Pro", "X7"] },
+  { marca: "Kia", modelos: ["Sportage", "Picanto", "Cerato", "Sorento", "Rio", "Soul", "Carnival", "Seltos", "K2500", "Carens", "Pregio", "K3", "Besta", "K2700", "Sephia", "K4"] },
+  { marca: "Land Rover", modelos: ["Range Rover Evoque", "Discovery Sport", "Freelander", "Range Rover Sport", "Discovery", "Defender", "Range Rover", "Range Rover Velar"] },
+  { marca: "Lexus", modelos: ["NX", "RX", "UX", "ES", "LBX", "IS", "GS", "RC", "LS", "LX", "GX", "LC"] },
+  { marca: "Lifan", modelos: ["X60", "Foison", "X50", "Myway"] },
+  { marca: "Mercedes-Benz", modelos: ["Sprinter", "Clase C", "Clase A", "Vito", "Clase GLA", "Clase E", "Clase CLA", "Clase GLC", "Clase ML", "Clase B", "Clase GLK", "Clase GLE", "Clase CLK", "Clase SLK", "Clase S", "Clase CLS", "Clase G", "Clase GLB", "Viano", "Clase CLC", "Clase SL", "MB 180", "Clase GL", "Clase GLS", "AMG GT", "Clase SLC", "Clase CLE", "EQA", "EQE"] },
+  { marca: "Mini", modelos: ["Cooper", "Countryman", "Clubman", "Paceman", "Aceman"] },
+  { marca: "Mitsubishi", modelos: ["L200", "Outlander", "Montero", "Lancer", "Outlander Sport", "Nativa"] },
+  { marca: "Nissan", modelos: ["Frontier", "Kicks", "Versa", "March", "Sentra", "Tiida", "Note", "X-Trail", "Kicks Play", "Murano", "Pathfinder", "X-Terra", "Leaf", "Terrano II", "Kait"] },
+  { marca: "Peugeot", modelos: ["208", "206", "207 Compact", "2008", "308", "Partner", "408", "307", "3008", "504", "306", "Partner Patagónica", "405", "301", "406", "Boxer", "Expert", "5008", "207", "407", "508", "205", "Hoggar", "RCZ", "106", "505", "4008", "807", "607", "Traveller", "Partner Rapid"] },
+  { marca: "Porsche", modelos: ["Cayenne", "Macan", "911", "Panamera", "Boxster", "Cayman", "Taycan"] },
+  { marca: "RAM", modelos: ["1500", "Rampage", "2500", "Dakota"] },
+  { marca: "Renault", modelos: ["Clio", "Sandero", "Kangoo", "Duster", "Logan", "Clio Mío", "Sandero Stepway", "Kwid", "Mégane", "Fluence", "Captur", "Duster Oroch", "Symbol", "Stepway", "19", "Master", "Alaskan", "Oroch", "Scénic", "Kardian", "Koleos", "Trafic", "9", "Twingo", "Laguna", "Arkana", "Latitude", "Grand Scénic", "Boreal", "Mégane E-Tech", "Niagara"] },
+  { marca: "Seat", modelos: ["Ibiza", "León", "Córdoba", "Toledo", "Altea", "Inca"] },
+  { marca: "Shineray", modelos: ["T30", "X30", "T32"] },
+  { marca: "Smart", modelos: ["Fortwo", "Forfour", "#1", "#3"] },
+  { marca: "SsangYong", modelos: ["Kyron", "Actyon", "Actyon Sports", "Rexton", "Korando", "Musso", "Stavic", "Istana"] },
+  { marca: "Subaru", modelos: ["Forester", "XV", "Outback", "Impreza", "Legacy", "WRX", "Crosstrek", "Tribeca"] },
+  { marca: "Suzuki", modelos: ["Fun", "Grand Vitara", "Vitara", "Jimny", "Swift", "Baleno", "Samurai"] },
+  { marca: "Toyota", modelos: ["Hilux", "Corolla", "Etios", "Corolla Cross", "Yaris", "SW4", "RAV4", "Hiace", "Camry", "Land Cruiser", "Land Cruiser Prado", "Yaris Cross", "C-HR", "Innova", "Prius", "86", "GR Yaris", "Avensis", "Corona", "bZ4X"] },
+  { marca: "Volkswagen", modelos: ["Gol Trend", "Amarok", "Gol", "Suran", "Vento", "Polo", "Fox", "Voyage", "Taos", "T-Cross", "Up!", "Golf", "Nivus", "Bora", "Saveiro", "Virtus", "Tiguan", "CrossFox", "Polo Classic", "Gol Country", "Suran Cross", "Passat", "Tiguan Allspace", "Tera", "New Beetle", "The Beetle", "Vento Variant", "Golf Variant", "Touareg", "Caddy", "Senda", "Passat Variant", "Sharan", "Passat CC", "Scirocco", "Transporter", "Multivan"] },
+  { marca: "Volvo", modelos: ["XC60", "XC40", "XC90", "V40", "S40", "S60", "S80", "C30", "EX30", "C40", "V60", "S90", "850", "V70", "XC70", "C70", "S70"] },
+];

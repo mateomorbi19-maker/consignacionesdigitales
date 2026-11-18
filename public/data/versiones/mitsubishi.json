@@ -1,0 +1,7 @@
+{
+  "L200": ["2.4 DI-D GLS 4x4 AT", "2.4 DI-D HP 4x4", "2.4 DI-D GLS 4x4", "2.4 DI-D HP 4x4 AT", "3.2 DI-D GLS 4x4", "3.2 DI-D 4x4 AT", "2.5 DI-D HP 4x4", "2.5 DI-D HP 4x4 AT", "2.5 TD GLS 4x4", "2.5 TD GL 4x2"],
+  "Outlander": ["2.4 GLS 4x4 CVT", "3.0 V6 GLS 4x4 AT", "2.5 4x4 CVT"],
+  "Montero": ["3.2 DI-D GLS AT", "3.2 DI-D GLS Sport AT", "3.2 DI-D GLS Sport"],
+  "Lancer": ["2.0 GLS CVT", "2.0 GLS", "2.0 GT CVT"],
+  "Outlander Sport": ["2.0 GLS 4x4 CVT", "2.0 GLS 4x2", "2.0 GLS 4x4"]
+}
