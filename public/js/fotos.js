@@ -80,6 +80,7 @@ export function crearGestorFotos({ zona, grid, input, boton, contador, aviso, to
 
   let cola = Promise.resolve();
   let destino = null; // casilla que abrió el selector de archivos (null: llenar en orden)
+  let fallidas = 0; // fotos que no se pudieron leer
 
   const cantidad = () => casillas.filter((casilla) => casilla.estado !== 'vacia').length;
 
@@ -155,6 +156,7 @@ export function crearGestorFotos({ zona, grid, input, boton, contador, aviso, to
       casilla.trabajo = undefined;
     } catch {
       if (trabajo.cancelada) return;
+      fallidas += 1;
       casilla.estado = 'vacia';
       casilla.trabajo = undefined;
       mostrarAviso(`No pudimos leer «${recortar(archivo.name)}». Probá con otra foto (JPG o PNG).`, true);
@@ -267,7 +269,9 @@ export function crearGestorFotos({ zona, grid, input, boton, contador, aviso, to
       quitar(indice);
       return;
     }
-    if (evento.target.closest('.toma-agregar')) {
+    // En una casilla libre, tocar el nombre de la toma también la carga.
+    const libre = !casilla.classList.contains('foto');
+    if (evento.target.closest('.toma-agregar') || (libre && evento.target.closest('.toma-nombre'))) {
       destino = indice;
       input.click();
     }
@@ -324,6 +328,8 @@ export function crearGestorFotos({ zona, grid, input, boton, contador, aviso, to
     /** Muestra un aviso junto a las fotos (p. ej., si se perdieron al recargar la página). */
     avisar: (mensaje, esError = false) => mostrarAviso(mensaje, esError),
     cantidad,
+    /** Fotos que no se pudieron leer desde que se abrió la página (para saber si falló alguna al esperar). */
+    fallidas: () => fallidas,
     procesando: () => casillas.some((casilla) => casilla.estado === 'procesando'),
     /** Espera a que terminen de procesarse todas las fotos en cola. */
     async esperar() {

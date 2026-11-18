@@ -185,6 +185,12 @@ const comboMarca = crearCatalogoMarcas({
   logos: LOGOS_MARCAS,
   slug,
   alConfirmar: confirmarMarca,
+  alElegir: (marca) => {
+    if (!marca) return;
+    anunciar(`Marca: ${marca}.${modeloBorradoPorMarca ? ' Borramos el modelo y la versión, que eran de otra marca.' : ''}`);
+    modeloBorradoPorMarca = false;
+  },
+  anunciar,
 });
 const comboModelo = crearCombobox({
   input: campos.modelo,
@@ -201,7 +207,10 @@ const comboVersion = crearCombobox({
   alConfirmar: () => guardarBorradorPronto(),
 });
 
+// Si al cambiar la marca se borraron modelo y versión, se avisa junto con la marca elegida.
+let modeloBorradoPorMarca = false;
 function confirmarMarca(valor) {
+  modeloBorradoPorMarca = false;
   // Un campo vacío no "confirma" nada: si borran la marca y escriben otra, igual se detecta el cambio.
   if (!normalizar(valor)) {
     guardarBorradorPronto();
@@ -221,6 +230,7 @@ function confirmarMarca(valor) {
       campos.version.value = '';
       modeloConfirmado = '';
       mostrarError('modelo', '');
+      modeloBorradoPorMarca = true;
     }
   }
   comboVersion.actualizar();
@@ -504,7 +514,11 @@ function irA(destino, { historial = 'push', animar = true, enfocar = true } = {}
   comboMarca.cerrar();
   comboModelo.cerrar();
   comboVersion.cerrar();
+  // Arriba de golpe: el desplazamiento suave del html es para el enlace "Cómo funciona".
+  const raiz = document.documentElement;
+  raiz.style.scrollBehavior = 'auto';
   window.scrollTo(0, 0);
+  raiz.style.scrollBehavior = '';
   if (enfocar) $('[data-foco]', panel)?.focus({ preventScroll: true });
 }
 
@@ -518,9 +532,11 @@ function volver() {
 }
 
 window.addEventListener('popstate', (evento) => {
-  // Un enlace dentro de la portada (por ejemplo "#como-funciona") no es un paso: que el navegador solo desplace.
-  if (!evento.state && window.location.hash && !(window.location.hash in PASO_DE_HASH)) return;
-  const paso = evento.state?.paso ?? PASO_DE_HASH[window.location.hash] ?? 'intro';
+  // Un enlace dentro de la portada (por ejemplo "#como-funciona") no es un paso. Desde la portada, que el
+  // navegador solo desplace; desde un paso, esa entrada del historial es la portada.
+  const esAncla = !evento.state && window.location.hash && !(window.location.hash in PASO_DE_HASH);
+  if (esAncla && pasoActual === 'intro') return;
+  const paso = esAncla ? 'intro' : (evento.state?.paso ?? PASO_DE_HASH[window.location.hash] ?? 'intro');
   const indice = Number(evento.state?.indice) || 0;
 
   if (enviando) {
@@ -605,7 +621,7 @@ $('#nudge-agregar').addEventListener('click', () => fotos.abrirSelector());
 /** Espera a que terminen de procesarse las fotos. Devuelve false si alguna no se pudo leer. */
 async function fotosListas() {
   if (!fotos.procesando()) return true;
-  const antes = fotos.cantidad();
+  const fallasAntes = fotos.fallidas();
   preparandoFotos = true;
   btnContinuarEstado.setAttribute('aria-disabled', 'true');
   etiquetaContinuarEstado.textContent = 'Preparando fotos…';
@@ -616,7 +632,7 @@ async function fotosListas() {
     btnContinuarEstado.removeAttribute('aria-disabled');
     actualizarAvisoSinFotos();
   }
-  if (fotos.cantidad() >= antes) return true;
+  if (fotos.fallidas() === fallasAntes) return true;
   // Alguna foto no se pudo leer: que la persona lo vea (el aviso queda junto a las fotos).
   if (pasoActual !== 'estado') irA('estado');
   $('#campo-fotos').scrollIntoView({ block: 'center', behavior: comportamientoScroll() });

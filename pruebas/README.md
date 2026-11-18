@@ -8,11 +8,13 @@ Pruebas automáticas que recorren el formulario en un navegador real (Microsoft 
 2. En otra terminal, en esta carpeta: `npm install` (solo la primera vez; instala `puppeteer-core`).
 3. `npm run flujo`: recorre los 3 pasos, la confirmación, los errores y los tamaños de celular y escritorio. También verifica que cada foto llegue con su toma. Resultado esperado: **43/43**.
 4. `npm run robustez`: reintentos, envío sin duplicar, error de conexión y bloqueo mientras envía. Resultado esperado: **12/12**.
-5. `npm run catalogo`: prueba el catálogo de marcas y las fotos por toma. Resultado esperado: **23/23**.
+5. `npm run catalogo`: prueba el catálogo de marcas y las fotos por toma. Resultado esperado: **32/32**.
    - Catálogo con mouse y teclado: nombre al pasar, clic, flechas, filtro, "Usar" y Esc.
-   - Catálogo en el celular: un toque elige la marca, y el teclado se abre recién con el segundo toque en el campo.
-   - Fotos: cada una en su casilla, varias juntas en orden, quitar, y su toma en `lead.json`.
-6. `npm run email`: prueba el aviso por email con un servidor de correo falso. No necesita la landing levantada ni Edge, no manda mails reales y no toca `../leads`. Resultado esperado: **17/17**.
+   - Variantes de escritura ("Mercedes Benz", "landrover", "GWM"), "Rover" queda como se escribió y Enter pasa a Modelo.
+   - Con el catálogo abierto, el clic en Modelo llega a Modelo; después de "Cómo funciona", un solo "Volver" vuelve a la portada.
+   - Catálogo en el celular: un toque elige la marca; el teclado se abre con "Escribir la marca" o con el segundo toque en el campo.
+   - Fotos: cada una en su casilla (también tocando el nombre de la toma), varias juntas en orden, quitar, y su toma en `lead.json`.
+6. `npm run email`: prueba el aviso por email con un servidor de correo falso. No necesita la landing levantada ni Edge, no manda mails reales y no toca `../leads`. Resultado esperado: **26/26**.
    - Con el aviso configurado: el mail llega con asunto, resumen, "Responder" al vendedor y las fotos adjuntas.
    - Si la clave es incorrecta, el vendedor igual ve su envío confirmado.
    - Sin configurar, el formulario funciona igual.

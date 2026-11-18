@@ -195,7 +195,10 @@ body:not([data-paso="intro"]) .topbar-enlace { display: none; }
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     align-items: center;
-    min-height: clamp(600px, calc(100svh - var(--alto-topbar)), 800px);
+    min-height: clamp(600px, calc(100vh - var(--alto-topbar)), 800px);
+  }
+  @supports (height: 100svh) {
+    .hero-grilla { min-height: clamp(600px, calc(100svh - var(--alto-topbar)), 800px); }
   }
   .hero-texto { padding-block: 40px 96px; }
   .titulo-hero { font-size: clamp(68px, 6.6vw, 96px); }
@@ -222,8 +225,18 @@ body:not([data-paso="intro"]) .topbar-enlace { display: none; }
       linear-gradient(to bottom, transparent 0%, rgba(var(--rgb-negro), .35) 14%, var(--color-negro) 34%, var(--color-negro) 70%, transparent 100%);
     mask-composite: intersect;
   }
-  /* El rótulo va donde termina la foto visible (la máscara la funde desde el 70 % de su alto). */
-  .hero-foto figcaption { right: max(var(--gutter), env(safe-area-inset-right)); bottom: calc(30% + 6px); }
+  /* El rótulo va en el piso, debajo de la línea de las ruedas. */
+  .hero-foto figcaption { right: max(var(--gutter), env(safe-area-inset-right)); bottom: 21%; }
+}
+/* La foto se recorta de costado: en pantallas más angostas se corre para que entren la trompa y parte del haz. */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .hero-foto img { object-position: 60% 50%; }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .hero-foto img { object-position: 35% 50%; }
+}
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .hero-foto img { object-position: 15% 50%; }
 }
 
 /* ---------- Secciones de la portada ---------- */
@@ -593,7 +606,12 @@ textarea.input {
   /* Una capa por encima de los campos: superficie opaca un paso más clara y sombra de elevación. */
   background-color: var(--color-negro);
   background-image: linear-gradient(var(--superficie-elevada), var(--superficie-elevada));
-  box-shadow: var(--sombra-flotante), inset 0 1px 0 var(--brillo-borde);
+  /* Velo del color de la tarjeta: 4 px en los cantos y un fundido abajo, así lo que queda debajo no asoma cortado. */
+  box-shadow:
+    0 0 0 4px var(--fondo-tarjeta),
+    0 16px 18px 4px var(--fondo-tarjeta),
+    var(--sombra-flotante),
+    inset 0 1px 0 var(--brillo-borde);
   scrollbar-width: thin;
   scrollbar-color: var(--linea-2) transparent;
 }
@@ -645,7 +663,25 @@ textarea.input {
   transition: grid-template-rows .55s var(--ease-out), opacity .3s var(--ease-out), visibility 0s;
 }
 .catalogo-in { min-height: 0; overflow: hidden; }
-.catalogo-scroll { padding: 14px 4px 6px; margin: 0 -4px; }
+.catalogo-scroll { position: relative; padding: 14px 4px 6px; margin: 0 -4px; }
+.catalogo-escribir {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  right: 4px;
+  min-height: 36px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 2px 0 10px;
+  border: 0;
+  background: none;
+  color: var(--texto-2);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.catalogo-escribir .i { width: 16px; height: 16px; }
+.catalogo.sin-teclado:not(.filtrando) .catalogo-escribir { display: inline-flex; }
 @media (min-width: 640px) {
   .catalogo-scroll {
     max-height: 404px;
@@ -702,9 +738,12 @@ textarea.input {
   position: absolute;
   inset: 0;
   display: grid;
-  place-items: center;
-  padding: 3px 2px;
+  align-content: center;
+  padding: 4px 6px;
   text-align: center;
+  white-space: nowrap;
+  -webkit-hyphens: manual;
+  hyphens: manual;
   font-size: 12.5px;
   line-height: 1.15;
   font-weight: 700;
@@ -716,9 +755,13 @@ textarea.input {
   pointer-events: none;
   transition: opacity .2s var(--ease-out), transform .4s var(--ease-out), color .2s var(--ease-out);
 }
+.marca-nombre.en-dos { white-space: normal; }
 @media (min-width: 640px) {
-  .marca-nombre { padding: 6px; font-size: 14px; }
+  .marca-nombre { padding: 6px 8px; font-size: 14px; }
 }
+/* Mientras el logo no llega se ve el nombre (si tarda: así no queda una tarjeta vacía). */
+.catalogo.abierto .marca.pendiente .marca-nombre { animation: nombre-pendiente 1ms linear .45s forwards; }
+@keyframes nombre-pendiente { to { opacity: 1; transform: none; color: var(--texto-2); } }
 .marca-check {
   position: absolute;
   top: 5px;
@@ -746,13 +789,13 @@ textarea.input {
   .marca:hover .marca-imagen { opacity: 0; transform: scale(.84); }
   .marca:hover .marca-nombre { opacity: 1; transform: none; color: var(--texto); }
 }
-.marca.activa { outline: 2px solid var(--color-azul); outline-offset: 2px; }
+.marca.activa { outline: 2px solid var(--color-azul); outline-offset: -3px; }
 
 /* Marcas cargadas sin logo: el nombre escrito ocupa su lugar */
 /* Con el mismo blanco y una masa parecida a la de los logos vecinos (no parecen deshabilitadas). */
-.marca--texto .marca-nombre { opacity: 1; transform: none; color: var(--texto); font-size: 15px; font-weight: 800; letter-spacing: -.015em; }
+.marca--texto .marca-nombre { opacity: 1; transform: none; color: var(--texto); font-size: 13.5px; font-weight: 800; letter-spacing: -.015em; }
 @media (min-width: 640px) {
-  .marca--texto .marca-nombre { font-size: 17px; }
+  .marca--texto .marca-nombre { font-size: 15.5px; }
 }
 
 /* Otra marca: deja escribirla igual */
@@ -767,7 +810,7 @@ textarea.input {
   color: var(--texto-2);
 }
 .marca--otra .i { width: 18px; height: 18px; }
-.marca--otra .marca-nombre { position: static; padding: 0 4px; opacity: 1; transform: none; color: inherit; font-size: 12.5px; }
+.marca--otra .marca-nombre { position: static; padding: 0 4px; opacity: 1; transform: none; color: inherit; font-size: 12.5px; white-space: normal; }
 @media (min-width: 640px) {
   .marca--otra .marca-nombre { font-size: 14px; }
 }
@@ -1021,6 +1064,7 @@ textarea.input {
   .foto-quitar:hover { background: var(--color-negro); border-color: var(--linea-hover); }
 }
 .toma-nombre { font-size: 12.5px; line-height: 1.25; font-weight: 600; color: var(--texto-3); }
+.toma:not(.foto) .toma-nombre { cursor: pointer; }
 .toma.foto .toma-nombre { color: var(--texto); }
 .fotos-pie {
   margin-top: 18px;
@@ -1214,6 +1258,21 @@ body:not([data-paso="intro"]) .pie { margin-top: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .hero-foto img { animation: encendido 1.9s var(--ease-out) both; }
   .toma.foto:not(.foto--cargando) .toma-marco { animation: aparecer .35s var(--ease-out) both; }
+}
+
+/* Temas de contraste (colores forzados): que se vea la respuesta marcada y los nombres de las marcas. */
+@media (forced-colors: active) {
+  .sino-opcion input:checked + span {
+    forced-color-adjust: none;
+    background: Highlight;
+    border-color: Highlight;
+    color: HighlightText;
+    box-shadow: none;
+  }
+  .marca-imagen,
+  .combo-logo { display: none; }
+  .marca-nombre { opacity: 1; transform: none; }
+  .combo.con-logo .input { padding-left: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

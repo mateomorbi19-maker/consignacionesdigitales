@@ -66,8 +66,9 @@ Después de cargar las variables, desplegá de nuevo. Al arrancar, la consola di
 2. **Paso 1 · Tu vehículo**: marca, modelo, versión y año.
    - **Marca** despliega un catálogo con los logos: primero las 8 más comunes en usados y después todas, de la A a la Z.
      - Con mouse: al pasar por un logo aparece el nombre, y un clic la elige.
-     - En el celular: un toque en el logo la elige (el nombre se ve un instante en la tarjeta). Tocar el campo despliega el catálogo sin abrir el teclado; tocarlo otra vez abre el teclado.
-     - Se puede escribir para filtrar. Si la marca no está, "Otra marca" (o escribirla y "Usar") la deja escrita igual.
+     - En el celular: un toque en el logo la elige (el nombre se ve un instante en la tarjeta). Tocar el campo despliega el catálogo sin abrir el teclado; "Escribir la marca" (o tocar otra vez el campo) abre el teclado.
+     - Se puede escribir para filtrar, sin importar espacios, guiones ni tildes ("Mercedes Benz", "landrover", "GWM", "VW"). Si la marca no está, "Otra marca" (o escribirla y "Usar") la deja escrita igual.
+     - Teclado: las flechas recorren las marcas de a una; Enter o Tab eligen la propuesta y pasan a Modelo.
    - **Modelo** sugiere los modelos de la marca elegida (608 en total) y también acepta texto libre.
    - **Versión** sugiere las versiones del modelo elegido y es opcional: si no la saben, marcan "No sé la versión" (o la dejan vacía) y siguen.
 3. **Paso 2 · Estado y fotos**: kilometraje, golpes o reparaciones (si responde "Sí", se despliega el tipo y el detalle), única mano y las fotos.

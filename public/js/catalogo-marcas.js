@@ -8,8 +8,11 @@
    - Con mouse: al pasar por un logo aparece el nombre; un clic lo elige.
    - Con el dedo: un toque lo elige (el nombre se ve un instante en la tarjeta, en azul).
    - En el celular, tocar el campo despliega el catálogo sin abrir el
-     teclado; tocarlo otra vez (o "Otra marca") abre el teclado para escribir.
-   - Escribir filtra los logos y se puede dejar una marca que no está.
+     teclado; "Escribir la marca", tocar otra vez el campo u "Otra marca"
+     abren el teclado para escribir.
+   - Teclado: las flechas recorren las marcas de a una, en orden de lectura.
+   - Escribir filtra los logos (sin importar espacios, guiones ni tildes:
+     "mercedes benz", "landrover", "GWM") y se puede dejar una marca que no está.
    ========================================================================= */
 
 import { normalizar } from './combobox.js';
@@ -17,6 +20,25 @@ import { normalizar } from './combobox.js';
 const ICONO_CHECK = '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
 const ICONO_LAPIZ =
   '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+
+/** Otras formas de escribir una marca (la clave va sin espacios ni guiones). */
+const ALIAS = new Map([
+  ['gwm', 'Great Wall'],
+  ['vw', 'Volkswagen'],
+  ['mercedes', 'Mercedes-Benz'],
+  ['alfa', 'Alfa Romeo'],
+]);
+
+/** Nombres largos (9 letras o más): dónde cortan con guion si en la tarjeta no entran en una línea. */
+const CORTES = new Map([
+  ['Volkswagen', 'Volks­wagen'],
+  ['Chevrolet', 'Chevro­let'],
+  ['Mitsubishi', 'Mitsu­bishi'],
+  ['SsangYong', 'Ssang­Yong'],
+]);
+
+/** Compara sin tildes, mayúsculas, espacios ni guiones ("Mercedes Benz" = "Mercedes-Benz"). */
+const clave = (texto) => normalizar(texto).replace(/[^a-z0-9]/g, '');
 
 /**
  * @param {object} cfg
@@ -31,7 +53,8 @@ const ICONO_LAPIZ =
  * @param {Map<string, number>} cfg.logos    slug → ancho del logo (% de la tarjeta)
  * @param {(marca: string) => string} cfg.slug
  * @param {(valor: string) => void} [cfg.alConfirmar]  se llama al confirmar un valor (como en combobox.js)
- * @param {() => void} [cfg.alElegir]        se llama después de elegir con un clic o un toque
+ * @param {(marca: string) => void} [cfg.alElegir]     se llama después de elegir una marca de la lista
+ * @param {(mensaje: string) => void} [cfg.anunciar]   región viva para lectores de pantalla
  */
 export function crearCatalogoMarcas({
   input,
@@ -46,6 +69,7 @@ export function crearCatalogoMarcas({
   slug,
   alConfirmar = () => {},
   alElegir = () => {},
+  anunciar = () => {},
 }) {
   const combo = input.closest('.combo');
   const desplazable = catalogo.querySelector('.catalogo-scroll');
@@ -58,40 +82,58 @@ export function crearCatalogoMarcas({
 
   let abierto = false;
   let activa = null;
+  let activaAuto = false; // la opción activa la propuso el filtro (no la eligió la persona con las flechas)
 
-  let tipoPuntero = 'mouse';
   let escribiendo = false;
   let ignorarBlur = false;
-  let toquesEnCampo = 0; // toques del usuario en el campo con el catálogo abierto (el segundo abre el teclado)
+  let toquesEnCampo = 0; // activaciones del campo con el catálogo abierto (la segunda abre el teclado)
   let timerEntrada = 0;
   let timerCierre = 0;
+  let cierrePendiente = false;
+  let timerPlegar = 0;
+  let punteroApretado = false;
 
   // ---------- Construcción del listbox ----------
   const idBase = lista.id;
+  // El logo de Great Wall dice "GWM": el nombre accesible incluye lo que se ve.
+  const etiquetaDe = (marca) => (marca === 'Great Wall' ? 'Great Wall (GWM)' : marca);
   const crearOpcion = (marca, grupo, indice) => {
     const s = slug(marca);
     const ancho = logos.get(s);
     const op = document.createElement('div');
-    op.className = ancho ? 'marca' : 'marca marca--texto';
+    op.className = ancho ? 'marca pendiente' : 'marca marca--texto';
     op.id = `${idBase}-${grupo}-${s}`;
     op.setAttribute('role', 'option');
     op.setAttribute('aria-selected', 'false');
+    op.setAttribute('aria-label', etiquetaDe(marca));
     op.dataset.marca = marca;
     op.style.setProperty('--i', String(indice));
     if (ancho) {
       const img = document.createElement('img');
       img.className = 'marca-imagen';
-      img.src = `img/marcas/${s}.webp`;
       img.alt = '';
+      // loading va antes que src: WebKit decide si difiere la carga en el momento en que se asigna el src.
       img.loading = 'lazy';
       img.decoding = 'async';
       img.draggable = false;
       img.style.setProperty('--w', String(ancho));
+      // Mientras el logo no llega se ve el nombre; si no llega nunca, la tarjeta queda con el nombre escrito.
+      img.addEventListener('load', () => op.classList.remove('pendiente'), { once: true });
+      img.addEventListener(
+        'error',
+        () => {
+          img.remove();
+          op.classList.replace('pendiente', 'marca--texto');
+          programarAjuste();
+        },
+        { once: true },
+      );
+      img.src = `img/marcas/${s}.webp`;
       op.append(img);
     }
     const nombre = document.createElement('span');
     nombre.className = 'marca-nombre';
-    nombre.textContent = marca;
+    nombre.textContent = CORTES.get(marca) ?? marca;
     const check = document.createElement('span');
     check.className = 'marca-check';
     check.setAttribute('aria-hidden', 'true');
@@ -139,6 +181,13 @@ export function crearCatalogoMarcas({
   const tituloTodas = grupoTodas.querySelector('.grupo-titulo');
   lista.replaceChildren(grupoComunes, grupoTodas);
 
+  // En pantallas táctiles, una salida a la vista para escribir la marca (también para lectores de pantalla).
+  const botonEscribir = document.createElement('button');
+  botonEscribir.type = 'button';
+  botonEscribir.className = 'catalogo-escribir';
+  botonEscribir.innerHTML = `${ICONO_LAPIZ}<span>Escribir la marca</span>`;
+  desplazable.prepend(botonEscribir);
+
   const opciones = [...lista.querySelectorAll('.marca')];
   const opcionesTodas = [...grupoTodas.querySelectorAll('.marca')];
   const textosVacio = [...vacio.querySelectorAll('.vacio-texto')];
@@ -153,14 +202,19 @@ export function crearCatalogoMarcas({
   function aplicarModoPuntero() {
     input.placeholder = escribiendo ? PLACEHOLDER_ESCRIBIR : placeholderBase();
     // En pantallas táctiles el catálogo se despliega sin teclado; se escribe a pedido.
-    if (punteroGrueso.matches && !escribiendo) input.setAttribute('inputmode', 'none');
+    const sinTeclado = punteroGrueso.matches && !escribiendo;
+    if (sinTeclado) input.setAttribute('inputmode', 'none');
     else input.removeAttribute('inputmode');
+    catalogo.classList.toggle('sin-teclado', sinTeclado);
   }
 
   // ---------- Estado ----------
   const marcaExacta = (valor) => {
-    const n = normalizar(valor);
-    return n ? marcas.find((marca) => normalizar(marca) === n) : undefined;
+    const k = clave(valor);
+    if (!k) return undefined;
+    const alias = ALIAS.get(k);
+    if (alias && marcas.includes(alias)) return alias;
+    return marcas.find((marca) => clave(marca) === k);
   };
 
   /** Refleja en el catálogo y en el campo la marca escrita (tilde azul y logo). */
@@ -179,9 +233,10 @@ export function crearCatalogoMarcas({
     }
   }
 
-  function activar(op, { desplazar = true } = {}) {
+  function activar(op, { desplazar = true, auto = false } = {}) {
     activa?.classList.remove('activa');
     activa = op;
+    activaAuto = Boolean(op) && auto;
     if (op) {
       op.classList.add('activa');
       input.setAttribute('aria-activedescendant', op.id);
@@ -191,14 +246,14 @@ export function crearCatalogoMarcas({
     }
   }
 
-  /** Desplaza solo lo necesario para que la opción activa se vea entera. */
+  /** Desplaza solo lo necesario para que la opción activa se vea entera (y fuera del fundido de abajo). */
   function mostrar(op) {
     const r = op.getBoundingClientRect();
     const interno = desplazable.scrollHeight > desplazable.clientHeight + 1;
     if (interno) {
       const c = desplazable.getBoundingClientRect();
       if (r.top < c.top + 8) desplazable.scrollTop -= c.top + 8 - r.top;
-      else if (r.bottom > c.bottom - 8) desplazable.scrollTop += r.bottom - c.bottom + 8;
+      else if (r.bottom > c.bottom - 30) desplazable.scrollTop += r.bottom - c.bottom + 30;
       return;
     }
     const vv = window.visualViewport;
@@ -209,13 +264,27 @@ export function crearCatalogoMarcas({
   }
 
   const visibles = () => opciones.filter((op) => !op.hidden && !op.closest('.grupo').hidden);
-  const columnas = () => getComputedStyle(grupoTodas.querySelector('.grilla')).gridTemplateColumns.split(' ').length;
 
-  // Mismo criterio que combobox.js: exacta, empieza con, palabra que empieza con, contiene.
-  function filtrar(texto) {
+  /**
+   * Filtra por lo escrito. Orden: exacta, empieza con, palabra que empieza con, contiene y,
+   * por último, sin espacios ni guiones ("landrover"). Con `auto`, deja propuesta la mejor
+   * coincidencia solo si es exacta o empieza igual ("toy" → Toyota; "Rover" no propone Land Rover).
+   */
+  function filtrar(texto, { auto = false } = {}) {
     const n = normalizar(texto);
-    const rango = (nombre) =>
-      nombre === n ? 0 : nombre.startsWith(n) ? 1 : nombre.split(/[\s-]+/).some((p) => p.startsWith(n)) ? 2 : nombre.includes(n) ? 3 : 9;
+    const k = clave(texto);
+    const alias = ALIAS.get(k);
+    const prefijoAlias = (marca) => k.length >= 2 && [...ALIAS].some(([a, m]) => m === marca && a.startsWith(k));
+    const rango = (marca) => {
+      const nombre = normalizar(marca);
+      const c = clave(marca);
+      if (nombre === n || (k && c === k) || marca === alias) return 0;
+      if (nombre.startsWith(n) || (k && c.startsWith(k)) || prefijoAlias(marca)) return 1;
+      if (nombre.split(/[\s-]+/).some((p) => p.startsWith(n))) return 2;
+      if (nombre.includes(n)) return 3;
+      if (k && c.includes(k)) return 4;
+      return 9;
+    };
     catalogo.classList.toggle('filtrando', Boolean(n));
     grupoComunes.hidden = Boolean(n);
     tituloTodas.hidden = Boolean(n);
@@ -227,7 +296,7 @@ export function crearCatalogoMarcas({
         op.hidden = Boolean(n);
         continue;
       }
-      const r = n ? rango(normalizar(op.dataset.marca)) : 0;
+      const r = n ? rango(op.dataset.marca) : 0;
       op.hidden = r === 9;
       if (r !== 9) hay++;
       if (n && r < mejorRango) {
@@ -235,17 +304,25 @@ export function crearCatalogoMarcas({
         mejorRango = r;
       }
     }
-    vacio.hidden = !(n && hay === 0);
-    for (const s of textosVacio) s.textContent = texto.replace(/\s+/g, ' ').trim();
-    activar(n ? mejor : null);
+    const sinResultados = Boolean(n) && hay === 0;
+    const limpio = texto.replace(/\s+/g, ' ').trim();
+    vacio.hidden = !sinResultados;
+    for (const s of textosVacio) s.textContent = limpio;
+    if (auto && sinResultados) anunciar(`No encontramos «${limpio}» en la lista. Podés dejarla escrita así.`);
+    if (auto && mejor && mejorRango <= 1) activar(mejor, { auto: true });
+    else activar(null);
   }
 
   function abrir({ animar = true } = {}) {
     if (input.disabled) return;
     clearTimeout(timerCierre);
+    clearTimeout(timerPlegar);
+    cierrePendiente = false;
     if (abierto) return;
     abierto = true;
-    filtrar(marcaExacta(input.value) ? '' : input.value);
+    // Al desplegar no se propone nada. Sin teclado (celular), se ven todas las marcas aunque haya texto escrito.
+    const sinTeclado = punteroGrueso.matches && !escribiendo;
+    filtrar(marcaExacta(input.value) || sinTeclado ? '' : input.value);
     clearTimeout(timerEntrada);
     if (animar && !sinMovimiento.matches) {
       catalogo.classList.add('entrando');
@@ -262,6 +339,8 @@ export function crearCatalogoMarcas({
 
   function cerrar() {
     clearTimeout(timerCierre);
+    clearTimeout(timerPlegar);
+    cierrePendiente = false;
     toquesEnCampo = 0;
     for (const op of lista.querySelectorAll('.confirmando')) op.classList.remove('confirmando');
     if (!abierto) return;
@@ -314,7 +393,10 @@ export function crearCatalogoMarcas({
     input.value = op.dataset.marca;
     sincronizar();
     if (conPuntero && !sinMovimiento.matches) {
+      // Mientras se pliega, Tab o Enter no tienen que tomar otra opción activa.
+      activar(null);
       op.classList.add('confirmando');
+      cierrePendiente = true;
       timerCierre = window.setTimeout(cerrar, 180);
     } else {
       cerrar();
@@ -322,20 +404,23 @@ export function crearCatalogoMarcas({
     volverAElegir();
     confirmar();
     input.dispatchEvent(new Event('change', { bubbles: true }));
-    alElegir();
+    alElegir(input.value);
   }
 
   /**
-   * Abre el teclado para escribir la marca: segundo toque en el campo (selecciona
-   * lo escrito, así lo nuevo lo reemplaza) u "Otra marca" (deja el campo vacío).
+   * Abre el teclado para escribir la marca: "Escribir la marca", segundo toque en el campo
+   * (selecciona lo escrito, así lo nuevo lo reemplaza) u "Otra marca" (deja el campo vacío).
    */
   function escribir({ limpiar = false } = {}) {
     escribiendo = true;
+    let limpiado = false;
     if (limpiar && marcaExacta(input.value)) {
       input.value = '';
       sincronizar();
       filtrar('');
+      limpiado = true;
     }
+    // El blur y el foco que siguen solo sirven para que aparezca el teclado: no son "salir del campo".
     ignorarBlur = true;
     if (document.activeElement === input) input.blur();
     aplicarModoPuntero();
@@ -343,6 +428,8 @@ export function crearCatalogoMarcas({
     ignorarBlur = false;
     if (!abierto) abrir({ animar: false });
     if (input.value) input.select();
+    // Que el resto del formulario se entere de que la marca quedó vacía (modelo, borrador).
+    if (limpiado) input.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
   function usarTexto() {
@@ -350,7 +437,7 @@ export function crearCatalogoMarcas({
     volverAElegir();
     confirmar();
     input.dispatchEvent(new Event('change', { bubbles: true }));
-    alElegir();
+    alElegir(input.value);
   }
 
   // Los logos se piden recién cuando el catálogo está por usarse (no pesan en la portada).
@@ -361,20 +448,30 @@ export function crearCatalogoMarcas({
     for (const img of lista.querySelectorAll('img[loading="lazy"]')) img.loading = 'eager';
   }
 
+  /** Pliega el catálogo si el foco ya no volvió al campo. */
+  function plegarSiSalio() {
+    clearTimeout(timerPlegar);
+    timerPlegar = window.setTimeout(() => {
+      if (document.activeElement !== input) cerrar();
+    }, 0);
+  }
+
   // ---------- Eventos ----------
-  input.addEventListener('pointerdown', (evento) => {
-    tipoPuntero = evento.pointerType || 'mouse';
-    precargarLogos();
-  });
+  // Saber si hay un puntero apretado: el catálogo se pliega recién cuando se suelta (ver blur).
+  document.addEventListener('pointerdown', () => { punteroApretado = true; }, true);
+  const soltarPuntero = () => { punteroApretado = false; };
+  document.addEventListener('pointerup', soltarPuntero, true);
+  document.addEventListener('pointercancel', soltarPuntero, true);
+
+  input.addEventListener('pointerdown', precargarLogos);
   input.addEventListener('focus', () => {
     if (!ignorarBlur) abrir();
   });
   input.addEventListener('click', () => {
     if (!abierto) abrir();
-    const toque = tipoPuntero === 'touch' || tipoPuntero === 'pen';
-    if (!toque || !punteroGrueso.matches || escribiendo) return;
-    // Primer toque: catálogo sin teclado. Segundo toque en el campo (catálogo abierto): ahora sí, el teclado.
-    // Si el foco llegó solo (por ejemplo, al marcar un error), el primer toque del usuario todavía no lo abre.
+    if (!punteroGrueso.matches || escribiendo) return;
+    // Primera activación: catálogo sin teclado. Segunda (catálogo abierto): ahora sí, el teclado.
+    // Si el foco llegó solo (por ejemplo, al marcar un error), no hay clic: la primera del usuario todavía no lo abre.
     toquesEnCampo += 1;
     if (toquesEnCampo >= 2) escribir({ limpiar: false });
   });
@@ -383,19 +480,39 @@ export function crearCatalogoMarcas({
     logoCampo.hidden = true;
     combo.classList.remove('con-logo');
     if (!abierto) abrir({ animar: false });
-    filtrar(input.value);
+    filtrar(input.value, { auto: true });
+  });
+  // El blur propio de escribir() no tiene que llegar al formulario (validaría el campo recién vaciado).
+  input.addEventListener('focusout', (evento) => {
+    if (ignorarBlur) evento.stopPropagation();
   });
   input.addEventListener('blur', () => {
     if (ignorarBlur) return;
-    cerrar();
+    toquesEnCampo = 0;
     volverAElegir();
     confirmar();
+    activar(null);
+    if (!abierto) return;
+    // Plegar en el acto correría la página bajo el puntero y el clic caería en otro lado:
+    // se pliega después del clic que sacó el foco (con tope por si el pointerup no llega, p. ej., un <select>).
+    if (punteroApretado) {
+      document.addEventListener('pointerup', plegarSiSalio, { capture: true, once: true });
+      clearTimeout(timerPlegar);
+      timerPlegar = window.setTimeout(() => {
+        if (document.activeElement !== input) cerrar();
+      }, 1000);
+    } else {
+      // Con el dedo, el pointerup ya pasó: mousedown, mouseup y click llegan en la misma tarea.
+      plegarSiSalio();
+    }
   });
   input.addEventListener('keydown', (evento) => {
     if (evento.isComposing) return;
+    if (cierrePendiente) cerrar(); // recién eligieron con el puntero: el catálogo ya no cuenta como abierto
     const vis = visibles();
     const i = activa ? vis.indexOf(activa) : -1;
-    const cols = columnas();
+    const cursorAlFinal = input.selectionStart === input.value.length && input.selectionEnd === input.value.length;
+    const mover = (op) => activar(op ?? null);
     switch (evento.key) {
       case 'ArrowDown':
         evento.preventDefault();
@@ -403,33 +520,34 @@ export function crearCatalogoMarcas({
           abrir();
           return;
         }
-        activar(vis[i < 0 ? 0 : Math.min(vis.length - 1, i + cols)] ?? null);
+        mover(vis[i < 0 ? 0 : Math.min(vis.length - 1, i + 1)]);
         break;
       case 'ArrowUp':
         if (!abierto) return;
         evento.preventDefault();
         if (i < 0) return;
-        activar(i - cols >= 0 ? vis[i - cols] : null);
+        mover(i > 0 ? vis[i - 1] : null);
         break;
       case 'ArrowRight':
-        if (!abierto || i < 0) return;
+        // Con una opción que propuso el filtro, → mueve el cursor del texto hasta que llega al final.
+        if (!abierto || i < 0 || (activaAuto && !cursorAlFinal)) return;
         evento.preventDefault();
-        activar(vis[Math.min(vis.length - 1, i + 1)]);
+        mover(vis[Math.min(vis.length - 1, i + 1)]);
         break;
       case 'ArrowLeft':
-        if (!abierto || i < 0) return;
-        evento.preventDefault();
-        activar(vis[Math.max(0, i - 1)]);
-        break;
       case 'Home':
       case 'End':
-        if (!abierto || i < 0) return;
+        // ←, Inicio y Fin mueven el cursor del texto, salvo que la persona ya esté recorriendo la lista.
+        if (!abierto || i < 0 || activaAuto) return;
         evento.preventDefault();
-        activar(evento.key === 'Home' ? vis[0] : vis[vis.length - 1]);
+        if (evento.key === 'ArrowLeft') mover(vis[Math.max(0, i - 1)]);
+        else mover(evento.key === 'Home' ? vis[0] : vis[vis.length - 1]);
         break;
       case 'Enter':
         if (abierto && activa) {
-          evento.preventDefault();
+          // Elegida con las flechas: Enter solo elige. Propuesta por el filtro ("toy" → Toyota):
+          // la elige y deja seguir el Enter, que pasa al campo siguiente.
+          if (!activaAuto) evento.preventDefault();
           elegir(activa);
         } else {
           cerrar();
@@ -453,9 +571,6 @@ export function crearCatalogoMarcas({
     }
   });
 
-  boton.addEventListener('pointerdown', (evento) => {
-    tipoPuntero = evento.pointerType || 'mouse';
-  });
   boton.addEventListener('mousedown', (evento) => evento.preventDefault());
   boton.addEventListener('click', () => {
     if (abierto) {
@@ -468,10 +583,11 @@ export function crearCatalogoMarcas({
 
   // Tocar el catálogo no le saca el foco al campo (así no se cierra antes del clic).
   catalogo.addEventListener('mousedown', (evento) => evento.preventDefault());
-  catalogo.addEventListener('pointerdown', (evento) => {
-    tipoPuntero = evento.pointerType || 'mouse';
-  });
   catalogo.addEventListener('click', (evento) => {
+    if (evento.target.closest('.catalogo-escribir')) {
+      escribir({ limpiar: false });
+      return;
+    }
     if (evento.target.closest('.vacio-usar')) {
       usarTexto();
       return;
@@ -482,29 +598,54 @@ export function crearCatalogoMarcas({
     elegir(op, { conPuntero: true });
   });
 
-  // Si un nombre largo no entra en su tarjeta (p. ej., "Volkswagen" en un celular de 360 px), se achica
-  // apenas y se cierra un poco el espaciado, hasta 10 px como mínimo: nunca queda cortado.
+  /**
+   * Que cada nombre entre en su tarjeta con al menos 6 px de aire por lado: primero se achica
+   * (hasta 10 px); si así tampoco entra, pasa a dos líneas con guion ("Mercedes-" / "Benz").
+   */
+  const medidor = document.createRange();
+  function anchoTexto(s) {
+    medidor.selectNodeContents(s);
+    // En medidas de maqueta: si el paso está entrando (con escala), el rectángulo visible es más chico.
+    const escala = s.getBoundingClientRect().width / (s.offsetWidth || 1) || 1;
+    return medidor.getBoundingClientRect().width / escala;
+  }
   function ajustarNombres() {
     for (const s of lista.querySelectorAll('.marca:not(.marca--otra) .marca-nombre')) {
       s.style.fontSize = '';
       s.style.letterSpacing = '';
-      let tam = parseFloat(getComputedStyle(s).fontSize);
+      s.classList.remove('en-dos');
+      const estilo = getComputedStyle(s);
+      const disponible = s.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+      if (disponible <= 0) continue;
+      const base = parseFloat(estilo.fontSize);
+      let tam = base;
       let vueltas = 0;
-      while (s.scrollWidth > s.clientWidth + 0.5 && tam > 10 && vueltas++ < 12) {
+      while (anchoTexto(s) > disponible + 0.5 && tam > 10 && vueltas++ < 12) {
         tam -= 0.5;
         s.style.fontSize = `${tam}px`;
-        s.style.letterSpacing = '-0.025em';
+        s.style.letterSpacing = '-0.02em';
+      }
+      if (anchoTexto(s) <= disponible + 0.5) continue;
+      // Ni a 10 px entra en una línea: dos líneas, con el tamaño más grande que entre.
+      s.classList.add('en-dos');
+      tam = base;
+      s.style.fontSize = '';
+      s.style.letterSpacing = '';
+      vueltas = 0;
+      while (anchoTexto(s) > disponible + 0.5 && tam > 10 && vueltas++ < 12) {
+        tam -= 0.5;
+        s.style.fontSize = `${tam}px`;
+        s.style.letterSpacing = '-0.02em';
       }
     }
   }
-  if ('ResizeObserver' in window) {
-    let pendiente = 0;
-    new ResizeObserver(() => {
-      cancelAnimationFrame(pendiente);
-      pendiente = requestAnimationFrame(ajustarNombres);
-    }).observe(grupoTodas.querySelector('.grilla'));
+  let ajustePendiente = 0;
+  function programarAjuste() {
+    cancelAnimationFrame(ajustePendiente);
+    ajustePendiente = requestAnimationFrame(ajustarNombres);
   }
-  document.fonts?.ready.then(ajustarNombres);
+  if ('ResizeObserver' in window) new ResizeObserver(programarAjuste).observe(grupoTodas.querySelector('.grilla'));
+  document.fonts?.ready.then(programarAjuste);
 
   punteroGrueso.addEventListener?.('change', aplicarModoPuntero);
   aplicarModoPuntero();

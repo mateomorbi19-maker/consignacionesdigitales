@@ -162,6 +162,63 @@ log('\n== Catálogo en escritorio (1440x900): mouse y teclado');
   await page.keyboard.press('Escape');
   await sleep(150);
   check(!(await abierto(page)), 'Esc pliega el catálogo');
+
+  // Variantes de escritura: espacios, guiones y siglas llegan a la marca oficial.
+  for (const [escrito, esperado] of [['Mercedes Benz', 'Mercedes-Benz'], ['landrover', 'Land Rover'], ['GWM', 'Great Wall']]) {
+    await page.click('#marca', { count: 3 });
+    await page.keyboard.type(escrito, { delay: 20 });
+    await sleep(150);
+    await page.keyboard.press('Tab');
+    await sleep(250);
+    const r = await page.evaluate(() => ({ valor: document.querySelector('#marca').value, foco: document.activeElement?.id }));
+    check(r.valor === esperado && r.foco === 'modelo', `"${escrito}" + Tab queda como ${esperado} y pasa a Modelo (${JSON.stringify(r)})`);
+  }
+
+  // Una marca parecida que no está queda como se escribió ("Rover" no pasa a Land Rover).
+  await page.click('#marca', { count: 3 });
+  await page.keyboard.type('Rover', { delay: 20 });
+  await sleep(150);
+  await page.keyboard.press('Tab');
+  await sleep(250);
+  check((await valor(page, '#marca')) === 'Rover', `"Rover" + Tab queda como se escribió (${await valor(page, '#marca')})`);
+
+  // Enter con la marca escrita entera: la confirma y pasa a Modelo.
+  await page.click('#marca', { count: 3 });
+  await page.keyboard.type('Toyota', { delay: 20 });
+  await sleep(150);
+  await page.keyboard.press('Enter');
+  await sleep(250);
+  const conEnter = await page.evaluate(() => ({ valor: document.querySelector('#marca').value, foco: document.activeElement?.id }));
+  check(conEnter.valor === 'Toyota' && conEnter.foco === 'modelo', `"Toyota" + Enter la confirma y pasa a Modelo (${JSON.stringify(conEnter)})`);
+
+  // Con el catálogo abierto, el clic en Modelo llega a Modelo (el catálogo se pliega después del clic).
+  await page.click('#marca');
+  await sleep(800);
+  await page.click('#modelo');
+  await sleep(350);
+  const clic = await page.evaluate(() => ({
+    foco: document.activeElement?.id,
+    sugerencias: document.querySelector('#modelo').getAttribute('aria-expanded'),
+    catalogo: document.querySelector('#catalogo-marca').classList.contains('abierto'),
+  }));
+  check(clic.foco === 'modelo' && clic.sugerencias === 'true' && !clic.catalogo, `Con el catálogo abierto, un clic en Modelo abre sus sugerencias (${JSON.stringify(clic)})`);
+  await page.close();
+}
+
+/* ===================== Historial: "Cómo funciona" y después "Volver" ===================== */
+log('\n== Historial: el enlace "Cómo funciona" no le roba un "Volver" al paso 1');
+{
+  const page = await nuevaPagina(ESCRITORIO, 'historial');
+  await page.goto(`${BASE}/`, { waitUntil: 'networkidle0' });
+  await page.click('.topbar-enlace');
+  await sleep(900);
+  await page.click('[data-accion="empezar"]');
+  await page.waitForSelector('#panel-vehiculo:not([hidden])');
+  await sleep(500);
+  await page.click('#panel-vehiculo [data-accion="volver"]');
+  await sleep(600);
+  const paso = await page.evaluate(() => document.body.dataset.paso);
+  check(paso === 'intro', `Un solo "Volver" lleva a la portada (paso: ${paso})`);
   await page.close();
 }
 
@@ -206,6 +263,19 @@ log('\n== Catálogo en el celular (390x844, táctil): un toque elige');
   await page.keyboard.press('Escape');
   await sleep(200);
 
+  // "Escribir la marca": salida a la vista para escribir (también con lector de pantalla).
+  await tocar(page, '#titulo-vehiculo');
+  await sleep(300);
+  await tocar(page, '#marca');
+  await sleep(700);
+  const boton = await page.$eval('.catalogo-escribir', (e) => getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().height > 0);
+  await tocar(page, '.catalogo-escribir');
+  await sleep(300);
+  const conBoton = await page.evaluate(() => ({ inputmode: document.querySelector('#marca').getAttribute('inputmode'), foco: document.activeElement?.id }));
+  check(boton && conBoton.inputmode === null && conBoton.foco === 'marca', `"Escribir la marca" abre el teclado en el campo (${JSON.stringify({ boton, ...conBoton })})`);
+  await page.keyboard.press('Escape');
+  await sleep(200);
+
   /* ---------- Fotos por toma ---------- */
   await page.$eval('#marca', (e) => { e.value = ''; });
   await page.type('#marca', 'Toyota');
@@ -222,6 +292,17 @@ log('\n== Catálogo en el celular (390x844, táctil): un toque elige');
 
   const casillas = await page.$$eval('#fotos-grid > li', (els) => els.map((e) => `${e.dataset.toma}:${e.querySelector('.toma-nombre')?.textContent}`));
   check(casillas.length === 8 && casillas[0] === 'frente:Frente' && casillas[7] === 'baul:Baúl', `8 casillas con nombre (${casillas.map((c) => c.split(':')[1]).join(', ')})`);
+
+  let porNombre = false;
+  try {
+    const [selector0] = await Promise.all([page.waitForFileChooser({ timeout: 3000 }), page.click('[data-toma="frente"] .toma-nombre')]);
+    porNombre = true;
+    await selector0.cancel();
+  } catch {
+    porNombre = false;
+  }
+  check(porNombre, 'Tocar el nombre de una toma libre también abre el selector de fotos');
+  await sleep(200);
 
   const [selector1] = await Promise.all([page.waitForFileChooser(), page.click('[data-toma="motor"] .toma-agregar')]);
   await selector1.accept([fotos[0]]);

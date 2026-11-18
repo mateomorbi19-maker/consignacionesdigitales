@@ -4,7 +4,8 @@
      sobre el negro de la marca). Salen de los logos que juntó el dueño,
      pasados a blanco y recortados; solo marcas que están en catalogo.js.
    - El número es el ancho con que se muestra cada logo (% de su tarjeta),
-     calculado por área para que todos pesen parecido a la vista.
+     calculado por área para que todos pesen parecido a la vista. FIAT, IVECO,
+     Jeep y JAC van 18 % más chicos: son los de más masa del muro.
    - Las marcas cargadas sin logo (Chrysler, Dodge, DS, Jaguar, Seat,
      SsangYong) se muestran con el nombre escrito.
    ========================================================================= */
@@ -21,7 +22,7 @@ export const LOGOS_MARCAS = new Map([
   ["citroen", 37.2],
   ["dfsk", 72],
   ["dongfeng", 41.8],
-  ["fiat", 41.8],
+  ["fiat", 34.3],
   ["ford", 60.5],
   ["foton", 46],
   ["geely", 51.2],
@@ -30,9 +31,9 @@ export const LOGOS_MARCAS = new Map([
   ["honda", 49.9],
   ["hyundai", 72],
   ["isuzu", 72],
-  ["iveco", 71.7],
-  ["jac", 72],
-  ["jeep", 68.6],
+  ["iveco", 58.8],
+  ["jac", 59],
+  ["jeep", 56.3],
   ["jetour", 72],
   ["jmc", 31.3],
   ["kaiyi", 72],
