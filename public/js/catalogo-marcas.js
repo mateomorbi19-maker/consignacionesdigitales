@@ -6,7 +6,7 @@
    (confirmar al elegir, con Enter, con Tab o al salir del campo, y el evento
    "change" para el borrador), así que app.js no cambia su lógica.
    - Con mouse: al pasar por un logo aparece el nombre; un clic lo elige.
-   - Con el dedo: el primer toque muestra el nombre; el segundo, lo elige.
+   - Con el dedo: un toque lo elige (el nombre se ve un instante en la tarjeta, en azul).
    - En el celular, tocar el campo despliega el catálogo sin abrir el
      teclado; tocarlo otra vez (o "Otra marca") abre el teclado para escribir.
    - Escribir filtra los logos y se puede dejar una marca que no está.
@@ -58,7 +58,7 @@ export function crearCatalogoMarcas({
 
   let abierto = false;
   let activa = null;
-  let revelada = null;
+
   let tipoPuntero = 'mouse';
   let escribiendo = false;
   let ignorarBlur = false;
@@ -179,12 +179,6 @@ export function crearCatalogoMarcas({
     }
   }
 
-  function revelar(op) {
-    revelada?.classList.remove('revelada');
-    revelada = op;
-    op?.classList.add('revelada');
-  }
-
   function activar(op, { desplazar = true } = {}) {
     activa?.classList.remove('activa');
     activa = op;
@@ -243,7 +237,6 @@ export function crearCatalogoMarcas({
     }
     vacio.hidden = !(n && hay === 0);
     for (const s of textosVacio) s.textContent = texto.replace(/\s+/g, ' ').trim();
-    revelar(null);
     activar(n ? mejor : null);
   }
 
@@ -277,7 +270,6 @@ export function crearCatalogoMarcas({
     combo.removeAttribute('data-abierto');
     input.setAttribute('aria-expanded', 'false');
     boton.setAttribute('aria-expanded', 'false');
-    revelar(null);
     activar(null);
   }
 
@@ -411,7 +403,6 @@ export function crearCatalogoMarcas({
           abrir();
           return;
         }
-        revelar(null);
         activar(vis[i < 0 ? 0 : Math.min(vis.length - 1, i + cols)] ?? null);
         break;
       case 'ArrowUp':
@@ -486,16 +477,8 @@ export function crearCatalogoMarcas({
       return;
     }
     const op = evento.target.closest('.marca');
-    if (!op || op.hidden) {
-      revelar(null);
-      return;
-    }
-    const toque = tipoPuntero === 'touch' || tipoPuntero === 'pen';
-    if (toque && !op.dataset.otra && revelada !== op) {
-      revelar(op);
-      activar(null);
-      return;
-    }
+    if (!op || op.hidden) return;
+    // Un clic o un toque elige la marca (en el celular alcanza con un toque).
     elegir(op, { conPuntero: true });
   });
 

@@ -21,7 +21,7 @@ import { createReadStream } from 'node:fs';
 import { mkdir, stat, writeFile } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import { avisarNuevoLead, enmascarar, leerConfiguracion as leerConfiguracionAviso } from './aviso-email.js';
+import { avisarNuevoLead, enmascarar, explicarError, leerConfiguracion as leerConfiguracionAviso, verificarAviso } from './aviso-email.js';
 
 const RAIZ = path.dirname(fileURLToPath(import.meta.url));
 const DIR_PUBLICO = path.join(RAIZ, 'public');
@@ -417,7 +417,7 @@ async function recibirLead(req, res) {
   if (AVISO) {
     avisarNuevoLead(AVISO, registro, fotos)
       .then(() => console.log(`  ✉ Aviso enviado por email: ${marca} ${modelo} ${anio}`))
-      .catch((error) => console.error(`  ✖ No se pudo enviar el aviso por email (${registro.id}): ${error.message}`));
+      .catch((error) => console.error(`  ✖ No se pudo enviar el aviso por email (${registro.id}): ${explicarError(error, AVISO)}`));
   }
 }
 
@@ -499,10 +499,22 @@ async function escuchar(puerto, intentosRestantes = 10) {
     console.log(`  Los envíos se guardan en: ${DIR_LEADS}`);
     console.log(
       AVISO
-        ? `  ✉ Aviso por email: activo, a ${AVISO.para.map(enmascarar).join(', ')} (vía ${AVISO.host}:${AVISO.puerto})`
-        : '  ✉ Aviso por email: desactivado (configurá AVISO_EMAIL y SMTP_*; ver el README)',
+        ? `  ✉ Aviso por email: activo, a ${AVISO.para.map(enmascarar).join(', ')} (vía ${AVISO.modo === 'resend' ? 'Resend' : `${AVISO.host}:${AVISO.puerto}`})`
+        : '  ✉ Aviso por email: desactivado (configurá AVISO_EMAIL y SMTP_* o RESEND_API_KEY; ver el README)',
     );
     console.log('  (Ctrl+C para detener)');
+    // Prueba la conexión con el correo apenas arranca: si algo está mal, se ve en los logs sin esperar un envío.
+    if (AVISO) {
+      verificarAviso(AVISO)
+        .then(() =>
+          console.log(
+            AVISO.modo === 'smtp'
+              ? `  ✉ Conexión con el correo: OK (${AVISO.host}:${AVISO.puerto}, usuario y clave aceptados)`
+              : '  ✉ Aviso por Resend: configurado (se confirma con el primer envío)',
+          ),
+        )
+        .catch((error) => console.error(`  ✖ El aviso por email no va a salir: ${explicarError(error, AVISO)}`));
+    }
     console.log('');
   };
   const alFallar = (error) => {

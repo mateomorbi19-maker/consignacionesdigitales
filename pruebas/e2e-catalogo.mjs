@@ -165,8 +165,8 @@ log('\n== Catálogo en escritorio (1440x900): mouse y teclado');
   await page.close();
 }
 
-/* ===================== Celular: dos toques ===================== */
-log('\n== Catálogo en el celular (390x844, táctil): dos toques');
+/* ===================== Celular: un toque ===================== */
+log('\n== Catálogo en el celular (390x844, táctil): un toque elige');
 {
   const page = await nuevaPagina(MOVIL, 'movil');
   await page.goto(`${BASE}/`, { waitUntil: 'networkidle0' });
@@ -178,37 +178,27 @@ log('\n== Catálogo en el celular (390x844, táctil): dos toques');
   await sleep(700);
   const sinTeclado = await page.$eval('#marca', (e) => e.getAttribute('inputmode'));
   check((await abierto(page)) && sinTeclado === 'none', `Tocar Marca despliega el catálogo sin abrir el teclado (inputmode=${sinTeclado})`);
-  check(await page.$eval('.catalogo-ayuda', (e) => e.offsetParent !== null), 'En el celular se explica cómo elegir');
-
-  await tocar(page, '#lista-marca-c-toyota');
-  await sleep(450);
-  const primerToque = await page.evaluate(() => ({
-    revelada: document.querySelector('#lista-marca-c-toyota').classList.contains('revelada'),
-    opacidad: getComputedStyle(document.querySelector('#lista-marca-c-toyota .marca-nombre')).opacity,
-    valor: document.querySelector('#marca').value,
-  }));
-  check(primerToque.revelada && Number(primerToque.opacidad) > 0.95 && primerToque.valor === '', `Primer toque: aparece el nombre y todavía no elige (${JSON.stringify(primerToque)})`);
-  await page.screenshot({ path: `${OUT}/c03-celular-primer-toque.png` });
+  await page.screenshot({ path: `${OUT}/c03-celular-catalogo.png` });
 
   await tocar(page, '#lista-marca-c-toyota');
   await sleep(500);
-  check((await valor(page, '#marca')) === 'Toyota' && !(await abierto(page)), 'Segundo toque: elige Toyota y se pliega');
+  const unToque = await page.evaluate(() => ({
+    valor: document.querySelector('#marca').value,
+    logo: !document.querySelector('.combo-marca .combo-logo').hidden,
+    marcadas: document.querySelectorAll('#lista-marca [role=option][aria-selected=true]').length,
+  }));
+  check(unToque.valor === 'Toyota' && unToque.logo && unToque.marcadas === 2 && !(await abierto(page)), `Un toque elige Toyota, muestra su logo en el campo y pliega el catálogo (${JSON.stringify(unToque)})`);
 
-  // Tocar otra marca después de revelar una cambia cuál se muestra.
+  // Cambiar de marca también es un solo toque.
   await tocar(page, '#marca');
   await sleep(600);
-  await tocar(page, '#lista-marca-c-fiat');
-  await sleep(200);
   await tocar(page, '#lista-marca-c-renault');
-  await sleep(300);
-  const cambio = await page.evaluate(() => ({
-    fiat: document.querySelector('#lista-marca-c-fiat').classList.contains('revelada'),
-    renault: document.querySelector('#lista-marca-c-renault').classList.contains('revelada'),
-    valor: document.querySelector('#marca').value,
-  }));
-  check(!cambio.fiat && cambio.renault && cambio.valor === 'Toyota', `Tocar otro logo muestra ese nombre sin elegir (${JSON.stringify(cambio)})`);
+  await sleep(500);
+  check((await valor(page, '#marca')) === 'Renault' && !(await abierto(page)), 'Un toque en otra marca la cambia (Renault)');
 
-  // Segundo toque en el campo, con el catálogo abierto: ahora sí, el teclado.
+  // Con el catálogo abierto, un segundo toque en el campo abre el teclado para escribir.
+  await tocar(page, '#marca');
+  await sleep(600);
   await tocar(page, '#marca');
   await sleep(300);
   const escribir = await page.evaluate(() => ({ inputmode: document.querySelector('#marca').getAttribute('inputmode'), placeholder: document.querySelector('#marca').placeholder }));

@@ -2,6 +2,7 @@
 // No manda mails reales ni toca ../leads: usa una carpeta temporal. Uso: node prueba-email.mjs
 import { spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
+import http from 'node:http';
 import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
@@ -94,7 +95,9 @@ function smtpFalso({ rechazarClave = false } = {}) {
 async function levantarLanding(entorno) {
   const leads = await fs.mkdtemp(path.join(os.tmpdir(), 'surcars-prueba-email-'));
   const limpio = { ...process.env };
-  for (const clave of ['AVISO_EMAIL', 'SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'AVISO_REMITENTE']) delete limpio[clave];
+  for (const clave of ['AVISO_EMAIL', 'SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'AVISO_REMITENTE', 'AVISO_DESDE', 'RESEND_API_KEY', 'RESEND_API_URL']) {
+    delete limpio[clave];
+  }
   const hijo = spawn(process.execPath, [SERVIDOR], {
     env: { ...limpio, PORT: '3290', HOST: '127.0.0.1', LEADS_DIR: leads, ...entorno },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -115,6 +118,12 @@ async function levantarLanding(entorno) {
     hijo.stdout.on('data', mirar);
   });
   return { hijo, puerto, leads, salida: () => salida };
+}
+
+/** Espera (hasta `ms`) a que la consola del servidor muestre algo. */
+async function esperarSalida(landing, patron, ms = 8000) {
+  for (let t = 0; t < ms && !patron.test(landing.salida()); t += 100) await sleep(100);
+  return patron.test(landing.salida());
 }
 
 const jpeg = (relleno) => Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(300, relleno)]);
@@ -182,6 +191,7 @@ console.log('\n== Aviso por email configurado');
     SMTP_PASS: 'abcd efgh ijkl mnop',
   });
   check(/Aviso por email: activo/.test(landing.salida()) && !/dueno@example\.com/.test(landing.salida()), 'Al arrancar dice que el aviso está activo, sin mostrar la dirección completa');
+  check(await esperarSalida(landing, /Conexión con el correo: OK/), 'Al arrancar prueba la conexión y la clave, y lo confirma en los logs');
   const respuesta = await fetch(`http://127.0.0.1:${landing.puerto}/api/leads`, { method: 'POST', body: datosDeEnvio(Date.now()) });
   check(respuesta.status === 201, `El envío se guarda y responde 201 (${respuesta.status})`);
   const sesion = await smtp.esperarMail(10000).catch(() => null);
@@ -226,17 +236,90 @@ console.log('\n== Clave rechazada por el servidor de correo');
     SMTP_USER: 'prueba@example.com',
     SMTP_PASS: 'clave-mala',
   });
+  check(
+    await esperarSalida(landing, /El aviso por email no va a salir: El servidor de correo rechazó el usuario o la clave.*contraseña de aplicación/),
+    'Al arrancar avisa que la clave no anda y explica qué revisar',
+  );
   const respuesta = await fetch(`http://127.0.0.1:${landing.puerto}/api/leads`, { method: 'POST', body: datosDeEnvio(Date.now() + 1) });
   check(respuesta.status === 201, `El vendedor ve su envío confirmado igual (${respuesta.status})`);
-  for (let i = 0; i < 25 && !/No se pudo enviar el aviso/.test(landing.salida()); i++) await sleep(200);
-  check(/No se pudo enviar el aviso por email .*535/.test(landing.salida()), 'El error del mail queda anotado en la consola del servidor');
+  check(await esperarSalida(landing, /No se pudo enviar el aviso por email .*rechazó el usuario o la clave.*535/), 'El error del mail queda anotado en la consola, explicado');
   check((await fs.readdir(landing.leads)).length === 1, 'Y el envío queda guardado');
   landing.hijo.kill();
   smtp.servidor.close();
   await fs.rm(landing.leads, { recursive: true, force: true });
 }
 
-/* ========== 3. Sin configurar ========== */
+/* ========== 3. Puerto de correo bloqueado (nadie atiende) ========== */
+console.log('\n== Puerto de correo bloqueado');
+{
+  const libre = await new Promise((resolver) => {
+    const s = net.createServer();
+    s.listen(0, '127.0.0.1', () => {
+      const { port } = s.address();
+      s.close(() => resolver(port));
+    });
+  });
+  const landing = await levantarLanding({
+    AVISO_EMAIL: 'dueno@example.com',
+    SMTP_HOST: '127.0.0.1',
+    SMTP_PORT: String(libre),
+    SMTP_USER: 'prueba@example.com',
+    SMTP_PASS: 'clave',
+  });
+  check(
+    await esperarSalida(landing, /El aviso por email no va a salir: No se pudo conectar con 127\.0\.0\.1:\d+\. .*bloquee ese puerto.*SMTP_PORT=465.*RESEND_API_KEY/),
+    'Si el hosting bloquea el puerto, los logs lo dicen y sugieren el otro puerto o Resend',
+  );
+  landing.hijo.kill();
+  await fs.rm(landing.leads, { recursive: true, force: true });
+}
+
+/* ========== 4. Por HTTPS con Resend (una API falsa en esta compu) ========== */
+console.log('\n== Aviso por Resend');
+{
+  let pedido = null;
+  const api = http.createServer((req, res) => {
+    let cuerpo = '';
+    req.on('data', (d) => (cuerpo += d));
+    req.on('end', () => {
+      pedido = { metodo: req.method, autorizacion: req.headers.authorization, json: JSON.parse(cuerpo || '{}') };
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end('{"id":"prueba"}');
+    });
+  });
+  await new Promise((r) => api.listen(0, '127.0.0.1', r));
+  const landing = await levantarLanding({
+    AVISO_EMAIL: 'dueno@example.com',
+    RESEND_API_KEY: 're_prueba123',
+    RESEND_API_URL: `http://127.0.0.1:${api.address().port}/emails`,
+  });
+  check(/Aviso por email: activo, a .* \(vía Resend\)/.test(landing.salida()), 'Al arrancar dice que avisa por Resend');
+  const respuesta = await fetch(`http://127.0.0.1:${landing.puerto}/api/leads`, { method: 'POST', body: datosDeEnvio(Date.now() + 3) });
+  check(respuesta.status === 201, `El envío responde 201 (${respuesta.status})`);
+  for (let t = 0; t < 8000 && !pedido; t += 100) await sleep(100);
+  const j = pedido?.json ?? {};
+  check(pedido?.metodo === 'POST' && pedido?.autorizacion === 'Bearer re_prueba123', 'Llama a la API con la clave');
+  check(
+    JSON.stringify(j.to) === '["dueno@example.com"]' &&
+      j.from === 'Surcars · Consignaciones <onboarding@resend.dev>' &&
+      j.subject === 'Nueva consignación: Toyota Corolla 2019' &&
+      j.reply_to === 'juan@mail.com',
+    `Destinatario, remitente, asunto y "responder" correctos (${j.subject})`,
+  );
+  check(
+    (j.attachments ?? []).length === 2 &&
+      j.attachments[0].filename === '01-frente.jpg' &&
+      Buffer.from(j.attachments[0].content, 'base64').equals(FOTO_1) &&
+      String(j.html).includes('85.000 km'),
+    'Lleva el resumen y las fotos adjuntas',
+  );
+  check(await esperarSalida(landing, /Aviso enviado por email/), 'Y lo confirma en los logs');
+  landing.hijo.kill();
+  api.close();
+  await fs.rm(landing.leads, { recursive: true, force: true });
+}
+
+/* ========== 5. Sin configurar ========== */
 console.log('\n== Sin configurar el aviso');
 {
   const landing = await levantarLanding({});

@@ -661,11 +661,6 @@ textarea.input {
     mask-image: linear-gradient(to bottom, var(--color-negro) calc(100% - 28px), transparent);
   }
 }
-.catalogo-ayuda { margin: 0 0 14px; font-size: 14px; line-height: 1.45; color: var(--texto-3); }
-@media (hover: hover) and (pointer: fine) {
-  .catalogo-ayuda { display: none; }
-}
-.catalogo-scroll:has(.catalogo-vacio:not([hidden])) .catalogo-ayuda { display: none; }
 .grupo + .grupo { margin-top: 22px; }
 .grupo-titulo { margin-bottom: 10px; font-size: 13.5px; line-height: 1.3; font-weight: 700; color: var(--texto-2); }
 .grilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
@@ -739,14 +734,11 @@ textarea.input {
 }
 .marca-check .i { width: 11px; height: 11px; stroke-width: 2.5; }
 
-/* Nombre visible: mouse encima, primer toque, teclado o recién elegida */
-.marca.revelada,
+/* Nombre visible: mouse encima, teclado o recién elegida (con el dedo, al tocar) */
 .marca.activa,
 .marca.confirmando { border-color: var(--linea-hover); background-color: var(--superficie-2); }
-.marca.revelada .marca-imagen,
 .marca.activa .marca-imagen,
 .marca.confirmando .marca-imagen { opacity: 0; transform: scale(.84); }
-.marca.revelada .marca-nombre,
 .marca.activa .marca-nombre,
 .marca.confirmando .marca-nombre { opacity: 1; transform: none; color: var(--texto); }
 @media (hover: hover) {
