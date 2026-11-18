@@ -499,15 +499,18 @@ export function crearCatalogoMarcas({
     elegir(op, { conPuntero: true });
   });
 
-  // Si un nombre largo no entra en su tarjeta (p. ej., "Volkswagen" en un celular chico), se achica apenas.
+  // Si un nombre largo no entra en su tarjeta (p. ej., "Volkswagen" en un celular de 360 px), se achica
+  // apenas y se cierra un poco el espaciado, hasta 10 px como mínimo: nunca queda cortado.
   function ajustarNombres() {
     for (const s of lista.querySelectorAll('.marca:not(.marca--otra) .marca-nombre')) {
       s.style.fontSize = '';
+      s.style.letterSpacing = '';
       let tam = parseFloat(getComputedStyle(s).fontSize);
       let vueltas = 0;
-      while (s.scrollWidth > s.clientWidth + 0.5 && tam > 10.5 && vueltas++ < 8) {
+      while (s.scrollWidth > s.clientWidth + 0.5 && tam > 10 && vueltas++ < 12) {
         tam -= 0.5;
         s.style.fontSize = `${tam}px`;
+        s.style.letterSpacing = '-0.025em';
       }
     }
   }

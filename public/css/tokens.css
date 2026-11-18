@@ -27,6 +27,7 @@
   --linea-punteada: rgba(var(--rgb-blanco), .26);
   --superficie: rgba(var(--rgb-blanco), .035);
   --superficie-2: rgba(var(--rgb-blanco), .07);
+  --superficie-elevada: rgba(var(--rgb-blanco), .12); /* capas flotantes (listas de sugerencias) */
   --brillo-borde: rgba(var(--rgb-blanco), .06);    /* luz en el canto superior de tarjetas */
   --brillo-boton: rgba(var(--rgb-blanco), .22);
   --velo: rgba(var(--rgb-negro), .74);              /* fondos de controles sobre fotos */
