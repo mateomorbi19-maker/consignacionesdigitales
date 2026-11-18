@@ -23,6 +23,14 @@ npm run red
 
 En el celular, abrí la dirección **Red** que muestra la consola (por ejemplo `http://192.168.0.23:3000`). La primera vez, Windows puede pedir permiso en el firewall. Usalo solo en redes de confianza: cualquiera en la misma red puede abrirlo.
 
+## Publicarlo (Docker / Easypanel)
+
+El repo trae un `Dockerfile`, así que Easypanel (o cualquier hosting con Docker) lo construye directo.
+
+- **Puerto:** la app escucha en el **3000** dentro del contenedor. En Easypanel, el dominio apunta al puerto 3000. El HTTPS lo pone Easypanel.
+- **Envíos:** se guardan en `/app/leads`. Para no perderlos en cada despliegue, montá un volumen ahí. En Easypanel, en Montajes, agregá un "Volume" con ruta `/app/leads`. Igual, el destino definitivo de los envíos sigue pendiente (ver abajo).
+- **Sin Docker** (un servidor propio): `HOST=0.0.0.0 PORT=3000 npm start`, y adelante un proxy (Nginx o Caddy) con el dominio y el HTTPS.
+
 ## Flujo
 
 1. **Portada**: título "Venta 100% digital", botón "Quiero vender mi vehículo", "Cómo funciona" en tres pasos y un cierre con el mismo botón.
@@ -95,6 +103,7 @@ En `lead.json`, `fotos` tiene las rutas y `fotos_tomas` dice qué toma es cada f
 ```
 landing-consignacion/
 ├─ server.js             servidor local (archivos + recepción de envíos)
+├─ Dockerfile            imagen para publicarla (Easypanel u otro hosting con Docker)
 ├─ DESIGN.md             sistema visual de esta landing
 ├─ public/
 │  ├─ index.html         pantallas
